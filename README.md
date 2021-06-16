@@ -1,2 +1,2 @@
 # movies-explorer-frontend
-## Front
+## Front level-2 checkout
