@@ -1,0 +1,168 @@
+.aboutMe {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 66px 0 100px;
+}
+
+.aboutMe__title {
+  margin: 0;
+  padding: 0 0 23px;
+  letter-spacing: -.04em;
+  border-bottom: 1px solid #000;
+  font-size: 22px;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 27px;
+}
+
+.aboutMe__biography {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.aboutMe__biography-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.aboutMe__biography-info-container {
+  width: 100%;
+  max-width: 600px;
+}
+
+.aboutMe__photo {
+  display: block;
+  width: 100%;
+  max-width: 270px;
+  height: 100%;
+  border-radius: 10px;
+}
+
+.aboutMe__biography-title {
+  margin: 0;
+  padding: 0;
+  letter-spacing: -0.04em;
+  font-size: 50px;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 58px;
+}
+
+.aboutMe__biography-subtitle {
+  margin: 18px 0 0;
+  padding: 0;
+  font-size: 18px;
+  font-weight: 500;
+  font-style: normal;
+  line-height: 20px;
+}
+
+.aboutMe__biography-description {
+  margin: 26px 0 99px;
+  padding: 0;
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 22px;
+}
+
+.aboutMe__links {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.aboutMe__link {
+  width: min-content;
+  text-decoration: none;
+  color: #000;
+  font-size: 14px;
+  font-weight: 500;
+  font-style: normal;
+  line-height: 17px;
+}
+
+.aboutMe__link:last-of-type {
+  margin-right: 0;
+}
+
+.aboutMe__link:hover {
+  transition: opacity 0.2s linear;
+  opacity: 0.6;
+}
+
+
+@media (max-width: 768px) {
+  .aboutMe {
+    margin-bottom: 90px;
+  }
+
+  .aboutMe__title {
+    font-size: 40px;
+    line-height: 40px;
+  }
+
+  .aboutMe__biography-subtitle {
+    margin-top: 16px;
+
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .aboutMe__biography-description {
+    max-width: 364px;
+    margin-top: 20px;
+    margin-bottom: 87px;
+
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .aboutMe__photo {
+    min-width: 50px;
+    max-width: 255px;
+  }
+}
+
+@media (max-width: 320px) {
+  .aboutMe {
+    flex-direction: column-reverse;
+
+    margin-top: 60px;
+    margin-bottom: 69px;
+  }
+
+  .aboutMe__biography-info {
+    max-width: 100%;
+    margin-right: 0;
+  }
+
+  .aboutMe__biography-title {
+    margin-top: 40px;
+
+    font-size: 30px;
+    line-height: 36px;
+  }
+
+  .aboutMe__biography-subtitle {
+    margin-top: 20px;
+
+    font-size: 11px;
+    line-height: 16px;
+  }
+
+  .aboutMe__biography-description {
+    max-width: 100%;
+    margin-top: 20px;
+    margin-bottom: 40px;
+
+    font-size: 11px;
+    line-height: 16px;
+  }
+
+  .aboutMe__photo {
+    max-width: 100%;
+  }
+}

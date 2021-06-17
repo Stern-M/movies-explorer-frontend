@@ -1,0 +1,150 @@
+.promo {
+  position: relative;
+  display: grid;
+  flex-direction: column;
+  padding: 75px 70px 50px;
+  background: #F3C1F8;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "promo__info promo__main-illustration"
+    "promo__link promo__main-illustration";
+}
+
+.promo__info {
+  grid-area: promo__info;
+  margin-right: 20px;
+}
+
+.promo__title {
+  width: 100%;
+  max-width: 640px;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  color: #000000;
+  font-size: 50px;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 58px;
+}
+
+.promo__description {
+  width: 100%;
+  max-width: 310px;
+  margin: 36px 0 0;
+  text-align: left;
+  opacity: 0.5;
+  color: #000000;
+  font-size: 13px;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 16px;
+  mix-blend-mode: normal;
+}
+
+.promo__link {
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  max-width: max-content;
+  margin: 146px 0 25px;
+  padding: 9px 19px;
+  text-decoration: none;
+  color: #000000;
+  border: 1px rgba(255, 255, 255, 0.6) solid;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 500;
+  font-style: normal;
+  line-height: 16px;
+  grid-area: promo__link;
+}
+
+.promo__link:hover {
+  transition: opacity 0.2s linear;
+  opacity: 0.6;
+}
+
+.promo__logo {
+  width: 100%;
+  max-width: 310px;
+  height: auto;
+  grid-area: promo__main-illustration;
+  object-fit: contain;
+  object-position: right bottom;
+}
+
+.promo__together {
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .promo {
+    grid-template-areas:
+      "promo__main-illustration"
+      "promo__info"
+      "promo__link";
+
+    padding: 140px 44px 66px;
+    justify-items: center;
+    grid-template-columns: none;
+  }
+
+  .promo__together {
+    white-space: normal;
+  }
+
+  .promo__info {
+    margin-right: 0;
+  }
+
+  .promo__title {
+    max-width: 100%;
+    margin: 48px 0 0;
+    text-align: center;
+    font-size: 40px;
+    line-height: 50px;
+  }
+
+  .promo__description {
+    max-width: 260px;
+    margin: 22px auto 0;
+    text-align: center;
+    font-size: 13px;
+    line-height: 16px;
+  }
+
+  .promo__link {
+    margin-top: 92px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    line-height: 16px;
+  }
+}
+
+@media (max-width: 320px) {
+  .promo {
+    padding: 70px 10px 30px;
+  }
+
+  .promo__logo {
+    max-width: 210px;
+  }
+
+  .promo__title {
+    margin-top: 44px;
+    letter-spacing: -0.04em;
+    font-size: 30px;
+    line-height: 38px;
+  }
+
+  .promo__description {
+    margin-top: 24px;
+    font-size: 13px;
+    line-height: 16px;
+  }
+
+  .promo__link {
+    margin: 80px 0 0;
+  }
+}
