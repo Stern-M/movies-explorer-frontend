@@ -1,18 +1,18 @@
 .promo {
   position: relative;
   display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "promo__info promo__logo"
+    "promo__link promo__logo";
   flex-direction: column;
   padding: 75px 70px 50px;
   background: #F3C1F8;
-  grid-template-columns: 1fr auto;
-  grid-template-areas:
-    "promo__info promo__main-illustration"
-    "promo__link promo__main-illustration";
 }
 
 .promo__info {
-  grid-area: promo__info;
   margin-right: 20px;
+  grid-area: promo__info;
 }
 
 .promo__title {
@@ -28,7 +28,7 @@
   line-height: 58px;
 }
 
-.promo__description {
+.promo__subtitle {
   width: 100%;
   max-width: 310px;
   margin: 36px 0 0;
@@ -43,15 +43,15 @@
 }
 
 .promo__link {
+  margin: 146px 0 25px;
+  padding: 9px 19px;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
   max-width: max-content;
-  margin: 146px 0 25px;
-  padding: 9px 19px;
   text-decoration: none;
   color: #000000;
-  border: 1px rgba(255, 255, 255, 0.6) solid;
+  border: 1px #000000 solid;
   border-radius: 3px;
   font-size: 12px;
   font-weight: 500;
@@ -61,7 +61,6 @@
 }
 
 .promo__link:hover {
-  transition: opacity 0.2s linear;
   opacity: 0.6;
 }
 
@@ -69,29 +68,20 @@
   width: 100%;
   max-width: 310px;
   height: auto;
-  grid-area: promo__main-illustration;
   object-fit: contain;
   object-position: right bottom;
-}
-
-.promo__together {
-  white-space: nowrap;
+  grid-area: promo__logo;
 }
 
 @media (max-width: 768px) {
   .promo {
-    grid-template-areas:
-      "promo__main-illustration"
-      "promo__info"
-      "promo__link";
-
     padding: 140px 44px 66px;
     justify-items: center;
     grid-template-columns: none;
-  }
-
-  .promo__together {
-    white-space: normal;
+    grid-template-areas:
+      "promo__logo"
+      "promo__info"
+      "promo__link";
   }
 
   .promo__info {
@@ -99,14 +89,14 @@
   }
 
   .promo__title {
-    max-width: 100%;
     margin: 48px 0 0;
-    text-align: center;
+    max-width: 100%;
     font-size: 40px;
     line-height: 50px;
+    text-align: center;
   }
 
-  .promo__description {
+  .promo__subtitle {
     max-width: 260px;
     margin: 22px auto 0;
     text-align: center;
@@ -138,7 +128,7 @@
     line-height: 38px;
   }
 
-  .promo__description {
+  .promo__subtitle {
     margin-top: 24px;
     font-size: 13px;
     line-height: 16px;
