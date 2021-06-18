@@ -31,14 +31,15 @@
 }
 
 .aboutProject__div {
+  margin-right: 40px;
   max-width: 550px;
   display: grid;
   grid-template-areas:
     "about-project__div-title"
     "about-project__div-text";
-    flex-basis: 0;
-    flex-grow: 1;
-  margin-right: 40px;
+  flex-basis: 0;
+  flex-grow: 1;
+  
 }
 
 .aboutProject__div:last-of-type {
@@ -59,7 +60,7 @@
 
 .aboutProject__div-text {
   margin: 26px 0 0;
-  padding: 0;
+  padding-top: 26px;
   font-size: 14px;
   font-weight: normal;
   font-style: normal;
@@ -126,13 +127,22 @@
   }
 
   .aboutProject__div-text {
+    padding-top: 22px;
     font-size: 12px;
     line-height: 1.5;
   }
 
   .aboutProject__schedule {
+    margin: 0 0 121px;
     grid-template-columns: 21% 79%;
     max-width: 668px;
+  }
+}
+
+@media screen and (max-width: 555px) {
+  .aboutProject__div-text {
+    padding-top: 44px;
+
   }
 }
 
@@ -191,5 +201,13 @@
 
   .aboutProject__front-title {
     padding-top: 10px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .aboutProject__title {
+    margin-bottom: 60px;
+    padding-bottom: 28px;
+    font-size: 18px;
   }
 }
