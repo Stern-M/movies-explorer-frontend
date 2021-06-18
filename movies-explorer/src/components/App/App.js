@@ -9,16 +9,19 @@ import AboutProject from '../AboutProject/AboutProject';
 import Techs from '../Techs/Techs';
 import Portfolio from '../Portfolio/Portfolio';
 import Footer from '../Footer/Footer';
+import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
+import SearchForm from '../SearchForm/SearchForm';
 
 function App() {
   return (
     <div className="App">
       {/* < Promo />
       < AboutProject />
-      < Techs /> */}
+      < Techs />
       < AboutMe />
-      {/* < Portfolio />
+      < Portfolio />
       < Footer /> */}
+      < SearchForm />
     </div>
   );
 }

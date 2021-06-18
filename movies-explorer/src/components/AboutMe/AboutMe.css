@@ -91,7 +91,6 @@
 }
 
 .aboutMe__link:hover {
-  transition: opacity 0.2s linear;
   opacity: 0.6;
 }
 
@@ -101,6 +100,9 @@
     margin-bottom: 90px;
   }
 
+  .aboutMe__biography-info {
+    justify-content: flex-start;
+  }
   .aboutMe__title {
     font-size: 40px;
     line-height: 40px;
@@ -117,7 +119,6 @@
     max-width: 364px;
     margin-top: 20px;
     margin-bottom: 87px;
-
     font-size: 12px;
     line-height: 18px;
   }
@@ -128,10 +129,14 @@
   }
 }
 
+@media (max-width: 500px) {
+  .aboutMe__biography {
+    flex-direction: column-reverse;
+  }
+}
+
 @media (max-width: 320px) {
   .aboutMe {
-    flex-direction: column-reverse;
-
     margin-top: 60px;
     margin-bottom: 69px;
   }
@@ -143,14 +148,12 @@
 
   .aboutMe__biography-title {
     margin-top: 40px;
-
     font-size: 30px;
     line-height: 36px;
   }
 
   .aboutMe__biography-subtitle {
     margin-top: 20px;
-
     font-size: 11px;
     line-height: 16px;
   }
@@ -159,7 +162,6 @@
     max-width: 100%;
     margin-top: 20px;
     margin-bottom: 40px;
-
     font-size: 11px;
     line-height: 16px;
   }
