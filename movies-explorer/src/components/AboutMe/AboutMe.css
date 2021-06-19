@@ -1,9 +1,9 @@
 .aboutMe {
+  margin: 66px 0 100px;
+  padding: 0 70px 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  margin: 66px 0 100px;
-  padding: 0 70px 0;
 }
 
 .aboutMe__title {
@@ -18,10 +18,11 @@
 }
 
 .aboutMe__biography {
+  margin: 66px 0 0;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin: 66px 0 0;
+  
 }
 
 .aboutMe__biography-info {

@@ -14,7 +14,7 @@ function SearchForm () {
             className="search-form__input"
             placeholder="Фильм"
             minLength="1"
-            maxLength="100"
+            maxLength="150"
             size="1"
           />
           <button type="button" className="search-form__button"></button>

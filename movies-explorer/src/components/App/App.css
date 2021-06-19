@@ -11,9 +11,3 @@
   font-family: Inter, Arial, Helvetica, sans-serif;
   text-rendering: optimizeLegibility;
 }
-
-@media (max-width: 767px) {
-  .App {
-    padding: 0;
-  }
-}

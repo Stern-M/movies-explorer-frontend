@@ -1,15 +1,8 @@
 .aboutProject {
+  padding: 0 70px 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 0 70px 0;
-  /* width: 100%;
-  font-weight: 400;
-  font-size: 22px;
-  padding: 110px 70px;
-  box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
-  font-style: normal; */
 }
 
 .aboutProject__title {
@@ -25,9 +18,9 @@
 }
 
 .aboutProject__container {
+  margin: 0;
   display: flex;
   flex-direction: row;
-  margin: 0;
 }
 
 .aboutProject__div {

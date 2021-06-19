@@ -11,6 +11,7 @@ function Header () {
   const { pathname } = useLocation();
   const history = useHistory();
 
+  // от определенной ширины задаем бургерную иконку
   const [width, setWidth] = useState(window.innerWidth);
   const updateCurrentWidth = () => {
     setWidth(window.innerWidth);
