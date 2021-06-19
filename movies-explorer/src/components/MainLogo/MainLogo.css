@@ -1,11 +1,15 @@
-.main__logo {
-  margin: auto;
-}
-  
 .main__logo-container {
   width: 38px;
   height: 38px;
   border-radius: 50%;
   display: flex;
   flex-wrap: wrap;
+}
+
+.main__logo {
+  margin: auto;
+}
+
+.main__logo:hover {
+  opacity: 0.6;
 }

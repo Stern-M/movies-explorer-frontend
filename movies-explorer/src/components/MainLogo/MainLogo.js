@@ -1,12 +1,13 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import logo from '../../images/logo.svg';
 import './MainLogo.css';
 
 function MainLogo () {
   return (
-    <div className="main__logo-container">
+    <NavLink exact to="/" className="main__logo-container">
       <img className="main__logo" src={logo} alt="logo" />
-    </div>
+    </NavLink>
   )
 };
 
