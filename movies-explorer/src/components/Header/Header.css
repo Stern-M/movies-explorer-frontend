@@ -1,0 +1,52 @@
+.header {
+  background-color: #FFFFFF;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 18px 70px 0px;
+}
+
+.header-rose {
+  background-color: #F3C1F8;
+}
+
+.header__logo {
+  margin: auto;
+}
+  
+.header__logo-container {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.header__button-container {
+  display: flex;
+}
+
+.header__button-signup {
+  color: black;
+  background-color: inherit;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 14px;
+}
+
+.header__button-signin {
+  color: white;
+  background-color: black;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  border-radius: 3px;
+  width: 76px;
+}
+
+.header__burger-btn {
+  background: url('../../images/burger-button.svg') center;
+  width: 44px;
+  border: none;
+}

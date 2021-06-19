@@ -1,41 +1,45 @@
-import React, { useEffect } from 'react';
-import {
-  Route, Switch, useHistory, useLocation,
-} from 'react-router-dom';
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
 import '../../components/App/App.css';
-import Promo from '../Promo/Promo';
-import AboutMe from '../AboutMe/AboutMe';
-import AboutProject from '../AboutProject/AboutProject';
-import Techs from '../Techs/Techs';
-import Portfolio from '../Portfolio/Portfolio';
-import Footer from '../Footer/Footer';
-import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
-import SearchForm from '../SearchForm/SearchForm';
-import MoviesCard from '../MoviesCard/MoviesCard';
-import MoviesCardList from '../MoviesCardList/MoviesCardList';
+import Header from '../Header/Header';
+import Main from '../Main/Main';
 import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
 import Profile from '../Profile/Profile';
 import Error404Page from '../Error404Page/Error404Page';
 import Login from '../Login/Login';
+import Register from '../Register/Register'
 
 function App() {
   return (
     <div className="App">
-      {/* < Promo />
-      < AboutProject />
-      < Techs />
-      < AboutMe />
-      < Portfolio />
-      < Footer />
-      < SearchForm />
-      < MoviesCard />
-      < MoviesCardList />
-      < Movies />
-      < SavedMovies />
-      < Profile />
-      <Error404Page /> */}
-      < Login />
+      <Switch>
+        <Route exact path="/">
+          < Header />
+          < Main />
+        </Route>
+        <Route path="/movies">
+          < Header />
+          < Movies />
+        </Route>
+        <Route path="/saved-movies">
+          < Header />
+          < SavedMovies />
+        </Route>
+        <Route path="/profile">
+          < Header />
+          < Profile />
+        </Route>
+        <Route path="/signin">
+          < Login />
+        </Route>
+        <Route path="/signup">
+          < Register />
+        </Route>
+        <Route path="*">
+          < Error404Page />
+        </Route>
+    </Switch>
     </div>
   );
 }

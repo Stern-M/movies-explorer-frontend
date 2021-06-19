@@ -1,5 +1,5 @@
 import React from 'react';
-// import { useLocation } from 'react-router';
+import { useLocation } from 'react-router';
 import './MoviesCard.css';
 import saveIcon from '../../images/save-icon.svg';
 import delIcon from '../../images/del-icon.svg';
@@ -8,8 +8,8 @@ import testImage from '../../images/movie-image.svg'
 
 
 function MoviesCard() {
-  // const { pathname } = useLocation();
-  const pathname = '/movies';
+  const { pathname } = useLocation();
+  // состояние isAdded будет задаваться
   const isAdded = true;
   const saveIconButton = (isAdded ? savedIcon : saveIcon)
   const cardIcon = (pathname === "/movies" ? saveIconButton : delIcon)

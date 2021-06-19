@@ -11,8 +11,7 @@ function Error404Page() {
       <div className="error404__container">
         <p className="error404__num">404</p>
         <p className="error404__text">Страница не найдена</p>
-        <p className="error404__link" onClick={()=>{history.push('/')}}>Назад</p>
-        {/* <p className="error404__link" onClick={() => history.goBack()}>Назад</p> */}
+        <p className="error404__link" onClick={() => history.goBack()}>Назад</p>
       </div>
     </section>
   );
