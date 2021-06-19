@@ -4,7 +4,6 @@
   background: #FDFDFD;
   list-style-type: none;
   box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.08);
-  
 }
 
 .movie__container {
@@ -25,23 +24,22 @@
 }
 
 .movie__title {
-    font-style: normal;
-    font-weight: 500;
-    font-size: 15px;
-    line-height: 18px;
-    margin-left: 14px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 18px;
+  margin: 0 0 0 14px;
 }
 
 .movie__duration {
   font-size: 11px;
   color: #A0A0A0;
-  margin-left: 14px;
+  margin: 0 0 0 14px;
   font-weight: 400;
 }
 
 .movie__button {
   width: 14px;
-  height: 12px;
   margin: 0 24px 0 0;
   border: none;
   background: none;
@@ -52,4 +50,10 @@
 
 .movie__save-icon {
   align-self: center;
+}
+
+@media screen and (max-width: 768px) {
+  .movie__container {
+    padding: 14px 0 14px;
+  }
 }
