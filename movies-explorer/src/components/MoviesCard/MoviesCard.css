@@ -1,0 +1,55 @@
+.movie {
+  max-width: 364px;
+  overflow: hidden;
+  background: #FDFDFD;
+  list-style-type: none;
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.08);
+  
+}
+
+.movie__container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0 17px;
+}
+
+.movie__image {
+  width: 100%;
+}
+
+.movie__description{
+  display: flex;
+  flex-direction: column;
+}
+
+.movie__title {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 18px;
+    margin-left: 14px;
+}
+
+.movie__duration {
+  font-size: 11px;
+  color: #A0A0A0;
+  margin-left: 14px;
+  font-weight: 400;
+}
+
+.movie__button {
+  width: 14px;
+  height: 12px;
+  margin: 0 24px 0 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+}
+
+.movie__save-icon {
+  align-self: center;
+}

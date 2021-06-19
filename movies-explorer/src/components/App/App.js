@@ -11,6 +11,7 @@ import Portfolio from '../Portfolio/Portfolio';
 import Footer from '../Footer/Footer';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 import SearchForm from '../SearchForm/SearchForm';
+import MoviesCard from '../MoviesCard/MoviesCard';
 
 function App() {
   return (
@@ -20,8 +21,9 @@ function App() {
       < Techs />
       < AboutMe />
       < Portfolio />
-      < Footer /> */}
-      < SearchForm />
+      < Footer />
+      < SearchForm /> */}
+      < MoviesCard />
     </div>
   );
 }

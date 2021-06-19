@@ -61,7 +61,6 @@
 }
 
 .search-form__button:hover {
-  transition: opacity 0.2s linear;
   opacity: 0.6;
 }
 
