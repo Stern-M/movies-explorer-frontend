@@ -13,6 +13,7 @@ function SearchForm () {
             type="text"
             className="search-form__input"
             placeholder="Фильм"
+            required="true"
             minLength="1"
             maxLength="150"
             size="1"

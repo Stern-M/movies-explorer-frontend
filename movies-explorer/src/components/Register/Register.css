@@ -4,19 +4,6 @@
   padding: 70px 0;
 }
 
-.register__logo-img {
-  margin: auto;
-}
-  
-.register__logo {
-  background-color: #2BE080;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  display: flex;
-  flex-wrap: wrap;
-}
-
 .register__title {
   font-style: normal;
   font-weight: 500;
@@ -108,6 +95,8 @@
 @media screen and (max-width: 500px){
   .register {
     padding: 56px 30px 30px;
+    box-sizing: border-box;
+    margin: auto;
   }
 
   .register__title {
