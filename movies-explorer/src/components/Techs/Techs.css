@@ -33,15 +33,11 @@
 
 .techs__subtitle {
   width: 100%;
-
   max-width: 460px;
-
   margin: 26px 0 0;
   padding: 0;
-
   text-align: center;
   letter-spacing: -0.04em;
-
   font-size: 14px;
   font-weight: normal;
   font-style: normal;
@@ -50,7 +46,6 @@
 
 .techs__skills {
   display: grid;
-
   width: 100%;
   max-width: 690px;
   margin: 100px 0 100px;
@@ -101,6 +96,15 @@
 }
 
 @media (max-width: 320px) {
+  .techs {
+    padding: 0 14px 0;
+  }
+
+  .techs__section {
+    padding-bottom: 28px;
+    font-size: 18px;
+  }
+
   .techs__title {
     max-width: 100%;
     margin-top: 60px;

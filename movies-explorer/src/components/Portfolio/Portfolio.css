@@ -65,6 +65,10 @@
 }
 
 @media (max-width: 320px) {
+  .portfolio {
+    padding: 0 14px 0;
+  }
+
   .portfolio__sites {
     margin-top: 40px;
   }
@@ -76,7 +80,6 @@
 
   .portfolio__link {
     background-size: 10px 10px;
-
     font-size: 18px;
     line-height: 28px;
   }

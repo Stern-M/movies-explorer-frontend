@@ -7,10 +7,10 @@ import savedIcon from '../../images/saved-icon.svg';
 import testImage from '../../images/movie-image.svg'
 
 
-function MoviesCard() {
+function MoviesCard(props) {
   const { pathname } = useLocation();
   // состояние isAdded будет задаваться
-  const isAdded = true;
+  const isAdded = props.isAdded;
   const saveIconButton = (isAdded ? savedIcon : saveIcon)
   const cardIcon = (pathname === "/movies" ? saveIconButton : delIcon)
   
