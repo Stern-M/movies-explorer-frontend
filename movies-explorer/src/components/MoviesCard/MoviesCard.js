@@ -6,27 +6,35 @@ import delIcon from '../../images/del-icon.svg';
 import savedIcon from '../../images/saved-icon.svg';
 
 
-function MoviesCard(props) {
-  console.log(props)
+function MoviesCard({movie, addToSaved, isMovieAdded}) {
   const { pathname } = useLocation();
   // состояние isAdded будет задаваться
-  const isAdded = props.isAdded;
+  //const isAdded = props.isAdded;
+  const {
+    nameRU, duration, trailer, image,
+  } = movie;
+  const isAdded = isMovieAdded(movie);
   const saveIconButton = (isAdded ? savedIcon : saveIcon)
   const cardIcon = (pathname === "/movies" ? saveIconButton : delIcon)
+
+  const handleBookmarkClick = (e) => {
+    e.preventDefault();
+    addToSaved(movie, !isAdded);
+  };
   
   return (
     <li className="movie">
       <div className="movie__container">
         <div className="movie__description">
-          <h3 className="movie__title">{props.nameRU}</h3>
-          <span className="movie__duration">{props.duration} мин.</span>
+          <h3 className="movie__title">{nameRU}</h3>
+          <span className="movie__duration">{duration} мин.</span>
         </div>
         <button type="button" className="movie__button" >
-          <img src={cardIcon} alt="избранное" className="movie__save-icon"/>
+          <img src={cardIcon} alt="избранное" className="movie__save-icon" onClick={handleBookmarkClick}/>
         </button>
         
       </div>
-      <img src={props.image} alt={props.nameRU} className="movie__image" />
+      <img src={image} alt={nameRU} className="movie__image" />
       
     </li>
   );

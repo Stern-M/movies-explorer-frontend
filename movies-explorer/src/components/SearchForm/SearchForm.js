@@ -32,7 +32,7 @@ function SearchForm (props) {
           />
           <button type="submit" className="search-form__button"></button>
         </div>
-        <FilterCheckbox />
+        <FilterCheckbox shortFilter={props.shortFilter}/>
       </form>
     </section>
   );

@@ -3,7 +3,6 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 import '../../components/App/App.css';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
-import Header from '../Header/Header';
 import Main from '../Main/Main';
 import Movies from '../Movies/Movies';
 import SavedMovies from '../SavedMovies/SavedMovies';
@@ -12,17 +11,15 @@ import Error404Page from '../Error404Page/Error404Page';
 import Login from '../Login/Login';
 import Register from '../Register/Register';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
+import Preloader from '../Preloader/Preloader';
 import { api } from '../../utils/MainApi';
 
 function App() {
-  const [currentUser, setCurrentUser] = React.useState("");
+  const [currentUser, setCurrentUser] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
-  const [isInfoPopupOpen, setInfoPopupOpen] = React.useState(false);
-  const [registerStatus, setRegisterStatus] = React.useState(false);
-  const [userData, setUserData] = useState({
-    _id: '',
-    email: ''
-  });
+  const [isInfoPopupOpen, setInfoPopupOpen] = useState(false);
+  const [registerStatus, setRegisterStatus] = useState(false);
+  const [loader, setLoader] = useState('')
   const history = useHistory();
 
   useEffect(() => {
@@ -35,38 +32,13 @@ function App() {
     }
   }, [loggedIn])
 
-  function handleRegister(password, email, name) {
-    return api.register(password, email, name)
-      .then(() => {
-        history.push('/signin')
-        setRegisterStatus(false)
-        setInfoPopupOpen(true)
-      })
-      .catch((res) => {
-        if (!res || res === 400) {
-          console.log('некорректно заполнено одно из полей')
-          setRegisterStatus(true)
-          setInfoPopupOpen(true)
-          return res;
-        } if (!res || res === 409) {
-          console.log('Пользователь с переданным email уже существует')
-          setRegisterStatus(true)
-          setInfoPopupOpen(true)
-        } else {
-          console.log('Что-то пошло не так')
-          setRegisterStatus(true)
-          setInfoPopupOpen(true)
-        }
-      })
-  }
-
   const handleLogin = (password, email) => {
+    setLoader('preloader_active')
     return api.authorize(password, email)
       .then((data) => {
         localStorage.setItem('jwt', data.token)
         setLoggedIn(true)
         setCurrentUser(data)
-        setUserData({ email: email })
         tokenCheck()
         history.push('/movies')
       })
@@ -87,19 +59,56 @@ function App() {
           setInfoPopupOpen(true)
         }
       })
+      .finally(() => {
+        setLoader('');
+      })
+  }
+
+  function handleRegister(password, email, name) {
+    setLoader('preloader_active')
+    return api.register(password, email, name)
+      .then(() => {
+        handleLogin(password, email)
+        setRegisterStatus(false)
+        setInfoPopupOpen(true)
+      })
+      .catch((res) => {
+        if (!res || res === 400) {
+          console.log('некорректно заполнено одно из полей')
+          setRegisterStatus(true)
+          setInfoPopupOpen(true)
+          return res;
+        } if (!res || res === 409) {
+          console.log('Пользователь с переданным email уже существует')
+          setRegisterStatus(true)
+          setInfoPopupOpen(true)
+        } else {
+          console.log('Что-то пошло не так')
+          setRegisterStatus(true)
+          setInfoPopupOpen(true)
+        }
+      })
+      .finally(() => {
+        setLoader('');
+      })
   }
 
   const tokenCheck = () => {
     if (localStorage.getItem('jwt')) {
+      setLoader('preloader_active')
       let token = localStorage.getItem('jwt');
-      api.getContent(token)
-        .then((data) => {
-          if (data) {
+      api.getUserContent(token)
+        .then((userData) => {
+          if (userData) {
             setLoggedIn(true)
-            setUserData({ _id: data._id, email: data.email })
+            setCurrentUser(userData)
+            localStorage.setItem('currentUser', JSON.stringify(userData));
           }
         })
         .catch((err) => { console.log(err) })
+        .finally(() => {
+          setLoader('');
+        })
     }
   }
 
@@ -120,16 +129,16 @@ function App() {
   }
 
   //обновление данных юзера
-  function handleUpdateUser(data) {
-    console.log(data)
-    //здесь должен быть прелоадер
-    api.setUserData(data)
+  function handleUpdateUser(name, email) {
+    setLoader('preloader_active')
+    api.setUserData(name, email)
       .then((userInfo) => {
         setCurrentUser(userInfo);
-        closeAllPopups();
       })
       .catch(err => console.log(err))
-      .finally(() => { submitRender('.popup__profile', false) })
+      .finally(() => {
+        setLoader('');
+      })
   }
 
   function onEscClose(e) {
@@ -144,24 +153,30 @@ function App() {
     }
   }
 
-  //функция для вывода прелоадера в момент загрузки или изменения
-  //ПЕРЕПИСАТЬ!!!
-  function submitRender(popupSelector, isLoading) {
-    const buttonElement = document.querySelector(popupSelector).querySelector('.popup__button');
-    if (isLoading) {
-      buttonElement.textContent = "Сохранение...";
-    } else {
-      if (popupSelector === '.popup__adding') {
-        buttonElement.textContent = "Создать";
-      } else { buttonElement.textContent = "Сохранить"; }
+  function isMovieAdded(movie) {
+    if (localStorage.getItem('savedMoves')) {
+      localStorage.getItem('savedMoves').some((item) => item.id === movie.id)
     }
   }
+
+  //функция для вывода прелоадера в момент загрузки или изменения
+  //ПЕРЕПИСАТЬ!!!
+  // function submitRender(popupSelector, isLoading) {
+  //   const buttonElement = document.querySelector(popupSelector).querySelector('.popup__button');
+  //   if (isLoading) {
+  //     buttonElement.textContent = "Сохранение...";
+  //   } else {
+  //     if (popupSelector === '.popup__adding') {
+  //       buttonElement.textContent = "Создать";
+  //     } else { buttonElement.textContent = "Сохранить"; }
+  //   }
+  // }
 
   function signOut() {
     localStorage.clear();
     setLoggedIn(false);
     history.push('/');
-    setUserData('');
+    setCurrentUser('');
   }
 
   return (
@@ -174,17 +189,19 @@ function App() {
           <ProtectedRoute exact
             path="/movies"
             component={Movies}
-            loggedIn={loggedIn} />
+            loggedIn={loggedIn}
+            isMovieAdded={isMovieAdded}/>
           <ProtectedRoute exact
             path="/saved-movies"
             component={SavedMovies}
-            loggedIn={loggedIn} />
+            loggedIn={loggedIn}/>
           <ProtectedRoute exact
             path="/profile"
             component={Profile}
             loggedIn={loggedIn}
             onLogOut={signOut}
-            onUpdateUser={handleUpdateUser} />
+            onUpdateUser={handleUpdateUser} 
+            currentUser={currentUser}/>
           <Route path="/signin">
             < Login onLogin={handleLogin}/>
           </Route>
@@ -199,6 +216,7 @@ function App() {
           isOpen={isInfoPopupOpen}
           onClose={closeAllPopups}
           status={registerStatus} />
+        < Preloader loader={loader}/>
       </div>
     </CurrentUserContext.Provider>
   );

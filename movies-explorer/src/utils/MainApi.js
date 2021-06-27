@@ -34,53 +34,69 @@ class MainApi {
   }
   
   //запрос данных по юзеру с сервера
-  getContent(token) {
+  getUserContent(token) {
     return fetch(`${this._url}/users/me`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`
       }
     })
     .then(this._onError)
   }
 
-  //запрос карточек с сервера
-  getAllCards(token) {
-    return fetch(`${this._url}/cards`, {
-      method: "GET",
-      headers: 
-    {    "content-type": "application/json",
-        "Authorization": `Bearer ${token}`}
-    })
-    .then(this._onError)
-  }
-
-  setUserAvatar(avatar) {
-    return fetch(`${this._url}/users/me/avatar`, {
-      method: 'PATCH',
-      headers: this._headers,
-      body: JSON.stringify({avatar:avatar})
+  //запрос сохраненных фильмов
+  getSavedMovies() {
+    return fetch(`${this._url}/movies`, {
+      method: 'GET',
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        'Content-type': 'application/json',
+        Accept: 'application/json',
+      },
     })
       .then(this._onError)
   }
 
   //изменение данных юзера на сервере
-  setUserData(data) {
+  setUserData(name, email) {
     return fetch(`${this._url}/users/me`, {
       method: 'PATCH',
-      headers: this._headers,
-      body: JSON.stringify(data)
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        'Content-type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        name,
+        email,
+      }),
     })
     .then(this._onError)
   }
 
-  //добаввление новой карточки на сервер
-  addCard(data){
-    return fetch(`${this._url}/cards`, {
-      method: "POST",
-      headers: this._headers,
-      body: JSON.stringify(data)
+  //добаввление фильма в сохраненные
+  addToSavedMovies(data) {
+    return fetch(`${this._url}/movies`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        country: data.country || 'unknown',
+        director: data.director || 'unknown',
+        duration: data.duration || 'No data',
+        year: data.year || 'unknown',
+        description: data.description || 'No description',
+        image: data.image,
+        trailer: data.trailerLink || 'No trailer',
+        thumbnail: data.image || 'No image',
+        movieId: data.id || 'No data',
+        nameRU: data.nameRU,
+        nameEN: data.nameEN || 'No name',
+      }),
     })
     .then(this._onError)
   }

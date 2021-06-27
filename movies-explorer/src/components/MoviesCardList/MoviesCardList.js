@@ -2,8 +2,16 @@ import React from "react";
 import "./MoviesCardList.css";
 import MoviesCard from "../MoviesCard/MoviesCard";
 
-function MoviesCardList(props) {
-  if (props.movies.length === 0) {
+function MoviesCardList({movies, moviesAmount, setMoviesAmount, search, addToSaved, isMovieAdded}) {
+  if (search) {
+    return (
+      <section className="movies">
+        <p className="movies__not-found">Начнем поиск?</p>
+      </section>
+    )
+  }
+
+  if (movies.length === 0) {
     return (
       <section className="movies">
         <p className="movies__not-found">Ничего не найдено</p>
@@ -14,15 +22,15 @@ function MoviesCardList(props) {
   return (
     <section className="movies">
       <ul className="movies__list">
-        {props.movies.slice(0, props.moviesAmount.startCard).map(card => {
-          return <MoviesCard {...card} />
+        {movies.slice(0, moviesAmount.startCard).map(card => {
+          return <MoviesCard movie={card} addToSaved={addToSaved} isMovieAdded={isMovieAdded}/>
         })}
       </ul>
       <button
-        className={`movies__button ${props.moviesAmount.startCard < props.movies.length? "": "movies__button_hidden"}`}
+        className={`movies__button ${moviesAmount.startCard < movies.length? "": "movies__button_hidden"}`}
         type="button"
         onClick={()=>{
-          props.setMoviesAmount({...props.moviesAmount, startCard: props.moviesAmount.startCard + props.moviesAmount.moreCard})
+          setMoviesAmount({...moviesAmount, startCard: moviesAmount.startCard + moviesAmount.moreCard})
       }}>Ещё</button>
     </section>
   );
