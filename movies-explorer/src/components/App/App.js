@@ -69,7 +69,7 @@ function App() {
         setCurrentUser(data)
         setUserData({ email: email })
         tokenCheck()
-        history.push('/')
+        history.push('/movies')
       })
       .catch((data) => {
         if (data === 400) {

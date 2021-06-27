@@ -40,6 +40,7 @@ function Register(props) {
 					required
 					value={userName}
 					onChange={handleChangeName}
+					noValidate
 					></input>
 				<label className="register__caption">E-mail</label>
 				<input
@@ -47,14 +48,16 @@ function Register(props) {
 					className="register__input"
 					required
 					value={userEmail}
-					onChange={handleChangeEmail}></input>
+					onChange={handleChangeEmail}
+					noValidate></input>
 				<label className="register__caption">пароль</label>
 				<input
 					type="password"
 					className="register__input"
 					required
 					value={userPassword}
-					onChange={handleChangePassword}></input>
+					onChange={handleChangePassword}
+					noValidate></input>
 				<button type="submit" className="register__signup-btn">Зарегистрироваться</button>
 				<p className="register__signin-caption">Уже зарегистрированы?<button type="button" className="register__signin-btn" onClick={() => { history.push("/signin") }}>Войти</button></p>
 			</form>
