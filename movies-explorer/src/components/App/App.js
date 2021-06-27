@@ -13,7 +13,6 @@ import Login from '../Login/Login';
 import Register from '../Register/Register';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import { api } from '../../utils/MainApi';
-import { moviesApi } from '../../utils/MoviesApi'
 
 function App() {
   const [currentUser, setCurrentUser] = React.useState("");
@@ -32,7 +31,7 @@ function App() {
 
   useEffect(() => {
     if (loggedIn) {
-      history.push("/");
+      history.push("/movies");
     }
   }, [loggedIn])
 
@@ -104,31 +103,17 @@ function App() {
     }
   }
 
-  const [movies, setMovies] = useState([]);
-
-  //запрос карточек (совершается после loggedIn = true)
-  useEffect(() => {
-    if (loggedIn)
-    {moviesApi.getAllMovies(localStorage.getItem('jwt'))
-      .then((moviesList) => {
-        setMovies(moviesList);
-      })
-      .catch((err) => {
-        console.log(err);
-      });}
-  }, [loggedIn]);
-
   //запрос данных юзера (совершается после loggedIn = true)
-  useEffect(() => {
-    if (loggedIn) 
-    {moviesApi.getContent(localStorage.getItem('jwt'))
-      .then((userInfo) => {
-        setCurrentUser(userInfo);
-      })
-      .catch((err) => {
-        console.log(err);
-      });}
-  }, [loggedIn]);
+  // useEffect(() => {
+  //   if (loggedIn) 
+  //   {api.getContent(localStorage.getItem('jwt'))
+  //     .then((userInfo) => {
+  //       setCurrentUser(userInfo);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });}
+  // }, [loggedIn]);
 
   function closeAllPopups() {
     setInfoPopupOpen(false)
@@ -183,7 +168,7 @@ function App() {
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App" onKeyDown={onEscClose} tabIndex={0} onClick={onOverlayClose}>
         <Switch>
-          <Route exact path="/" >
+          <Route exact path="/">
             < Main loggedIn={loggedIn} />
           </Route>
           <ProtectedRoute exact

@@ -1,12 +1,23 @@
 import './SearchForm.css';
-import React from 'react';
+import React, { useState } from 'react';
 
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 
-function SearchForm () {
+function SearchForm (props) {
+  const [input, setInput] = useState('');
+
+  function handleChangeInput(e) {
+    setInput(e.target.value);
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    props.findMovie(input)
+  }
+
   return (
     <section className="search-form">
-      <form className="search-form__form">
+      <form className="search-form__form" onSubmit={handleSubmit}>
         <div className="search-form__search">
           <div className="search-form__logo"></div>
           <input
@@ -17,8 +28,9 @@ function SearchForm () {
             minLength="1"
             maxLength="150"
             size="1"
+            onChange={handleChangeInput}
           />
-          <button type="button" className="search-form__button"></button>
+          <button type="submit" className="search-form__button"></button>
         </div>
         <FilterCheckbox />
       </form>

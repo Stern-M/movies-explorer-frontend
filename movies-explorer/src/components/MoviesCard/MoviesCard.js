@@ -4,10 +4,10 @@ import './MoviesCard.css';
 import saveIcon from '../../images/save-icon.svg';
 import delIcon from '../../images/del-icon.svg';
 import savedIcon from '../../images/saved-icon.svg';
-import testImage from '../../images/movie-image.svg'
 
 
 function MoviesCard(props) {
+  console.log(props)
   const { pathname } = useLocation();
   // состояние isAdded будет задаваться
   const isAdded = props.isAdded;
@@ -18,15 +18,15 @@ function MoviesCard(props) {
     <li className="movie">
       <div className="movie__container">
         <div className="movie__description">
-          <h3 className="movie__title">33 слова о дизайне</h3>
-          <span className="movie__duration">1ч 47м</span>
+          <h3 className="movie__title">{props.nameRU}</h3>
+          <span className="movie__duration">{props.duration} мин.</span>
         </div>
         <button type="button" className="movie__button" >
           <img src={cardIcon} alt="избранное" className="movie__save-icon"/>
         </button>
         
       </div>
-      <img src={testImage} alt="Тестовое изображение" className="movie__image" />
+      <img src={props.image} alt={props.nameRU} className="movie__image" />
       
     </li>
   );
