@@ -12,7 +12,8 @@ import Error404Page from '../Error404Page/Error404Page';
 import Login from '../Login/Login';
 import Register from '../Register/Register';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
-
+import { api } from '../../utils/MainApi';
+import { moviesApi } from '../../utils/MoviesApi'
 
 function App() {
   const [currentUser, setCurrentUser] = React.useState("");
@@ -36,9 +37,9 @@ function App() {
   }, [loggedIn])
 
   function handleRegister(password, email, name) {
-    return mainApi.register(password, email)
+    return api.register(password, email, name)
       .then(() => {
-        history.push('/sign-in')
+        history.push('/signin')
         setRegisterStatus(false)
         setInfoPopupOpen(true)
       })
@@ -61,7 +62,7 @@ function App() {
   }
 
   const handleLogin = (password, email) => {
-    return mainApi.authorize(password, email)
+    return api.authorize(password, email)
       .then((data) => {
         localStorage.setItem('jwt', data.token)
         setLoggedIn(true)
@@ -92,7 +93,7 @@ function App() {
   const tokenCheck = () => {
     if (localStorage.getItem('jwt')) {
       let token = localStorage.getItem('jwt');
-      mainApi.getContent(token)
+      api.getContent(token)
         .then((data) => {
           if (data) {
             setLoggedIn(true)
@@ -103,14 +104,14 @@ function App() {
     }
   }
 
-  const [cards, setCards] = useState([]);
+  const [movies, setMovies] = useState([]);
 
   //запрос карточек (совершается после loggedIn = true)
   useEffect(() => {
     if (loggedIn)
-    {MoviesApi.getAllCards(localStorage.getItem('jwt'))
-      .then((cardsList) => {
-        setCards(cardsList);
+    {moviesApi.getAllMovies(localStorage.getItem('jwt'))
+      .then((moviesList) => {
+        setMovies(moviesList);
       })
       .catch((err) => {
         console.log(err);
@@ -120,7 +121,7 @@ function App() {
   //запрос данных юзера (совершается после loggedIn = true)
   useEffect(() => {
     if (loggedIn) 
-    {mestoAuth.getContent(localStorage.getItem('jwt'))
+    {moviesApi.getContent(localStorage.getItem('jwt'))
       .then((userInfo) => {
         setCurrentUser(userInfo);
       })
@@ -136,7 +137,7 @@ function App() {
   //обновление данных юзера
   function handleUpdateUser(data) {
     console.log(data)
-    submitRender('.popup__profile', true)
+    //здесь должен быть прелоадер
     api.setUserData(data)
       .then((userInfo) => {
         setCurrentUser(userInfo);
@@ -158,7 +159,8 @@ function App() {
     }
   }
 
-  //функция для вывода "сохранение..." в момент загрузки или изменения
+  //функция для вывода прелоадера в момент загрузки или изменения
+  //ПЕРЕПИСАТЬ!!!
   function submitRender(popupSelector, isLoading) {
     const buttonElement = document.querySelector(popupSelector).querySelector('.popup__button');
     if (isLoading) {
@@ -179,34 +181,39 @@ function App() {
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <div className="App">
+      <div className="App" onKeyDown={onEscClose} tabIndex={0} onClick={onOverlayClose}>
         <Switch>
-          <ProtectedRoute exact path="/" loggedIn={loggedIn}>
-            < Header />
-            < Main />
-          </ProtectedRoute>
-          <Route path="/movies">
-            < Header />
-            < Movies />
+          <Route exact path="/" >
+            < Main loggedIn={loggedIn} />
           </Route>
-          <Route path="/saved-movies">
-            < Header />
-            < SavedMovies />
-          </Route>
-          <Route path="/profile">
-            < Header />
-            < Profile />
-          </Route>
+          <ProtectedRoute exact
+            path="/movies"
+            component={Movies}
+            loggedIn={loggedIn} />
+          <ProtectedRoute exact
+            path="/saved-movies"
+            component={SavedMovies}
+            loggedIn={loggedIn} />
+          <ProtectedRoute exact
+            path="/profile"
+            component={Profile}
+            loggedIn={loggedIn}
+            onLogOut={signOut}
+            onUpdateUser={handleUpdateUser} />
           <Route path="/signin">
-            < Login />
+            < Login onLogin={handleLogin}/>
           </Route>
           <Route path="/signup">
-            < Register />
+            < Register onRegister={handleRegister}/>
           </Route>
           <Route path="*">
             < Error404Page />
           </Route>
         </Switch>
+        <InfoTooltip
+          isOpen={isInfoPopupOpen}
+          onClose={closeAllPopups}
+          status={registerStatus} />
       </div>
     </CurrentUserContext.Provider>
   );
