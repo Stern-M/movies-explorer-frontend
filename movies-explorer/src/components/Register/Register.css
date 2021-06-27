@@ -1,0 +1,115 @@
+.register {
+  width: 396px;
+  margin: 0 auto;
+  padding: 70px 0;
+}
+
+.register__title {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+  margin-bottom: 40px;
+}
+
+.register__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.register__caption {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  line-height: 12px;
+  color: #A0A0A0;
+}
+
+.register__input {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+  border: none;
+  border-radius: 8px;
+  background: #F9F9F9;
+  padding: 5px 0 10px;
+  margin-bottom: 24px;
+}
+
+.register__input:focus {
+  outline: none;
+  box-shadow: none;
+  border: 1px solid #111;
+}
+
+.register__signup-btn {
+  margin: 134px 0 16px;
+  height: 45px;
+  color: white;
+  background: #111;
+  border-radius: 3px;
+  border: none;
+  cursor: pointer;
+}
+
+.register__signup-btn:hover {
+  opacity: 0.6;
+}
+
+.register__signin-caption{
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  color: #A0A0A0;
+  margin: 0;
+}
+
+.register__signin-btn {
+  font-size: 14px;
+  line-height: 17px;
+  font-style: normal;
+  font-weight: normal;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  background-color: white;
+}
+
+.register__signin-btn:hover {
+  opacity: 0.6;
+}
+
+@media screen and (max-width: 768px){
+  
+  .register {
+    padding: 232px 0;
+  }
+
+  .register__title {
+    margin: 40px 0 40px;
+  }
+
+}
+
+@media screen and (max-width: 500px){
+  .register {
+    padding: 56px 30px 30px;
+    box-sizing: border-box;
+    margin: auto;
+  }
+
+  .register__title {
+    margin: 50px 0 80px;
+    text-align: center;
+  }
+
+  .register__header {
+    display: flex;
+    justify-content: center;
+  }
+
+  .register__signup {
+    margin: 216px 0 14px;
+  } 
+}

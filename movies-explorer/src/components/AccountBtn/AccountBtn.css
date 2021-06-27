@@ -1,0 +1,31 @@
+.account-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100px;
+  height: 32px;
+  padding-left: 11px;
+  box-sizing: border-box;
+  font-size: 13px;
+  line-height: .9;
+  color: #111;
+  border-radius: 50px;
+  font-weight: 500;
+  font-style: normal;
+  text-decoration: none;
+  box-shadow: 5px 4px 30px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+}
+
+.account-button:hover {
+  opacity: 0.6;
+}
+
+.account-button__logo {
+  width: 26px;
+  height: 26px;
+  margin-left: 7px;
+  border-radius: 50%;
+  background-color: #313131;
+  background: #F9F9F9 url('../../images/account-logo.svg') no-repeat center;
+}
