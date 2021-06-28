@@ -156,8 +156,12 @@ function App() {
     api
       .getSavedMovies()
       .then((movies) => {
-        setSavedMovies(movies.map((item) => { return { ...item, id: item.movieId }}))
-        localStorage.setItem('savedMovies', JSON.stringify(movies));
+        const allSavedMovies = movies.map((item) => { return { ...item, id: item.movieId }})
+        const mySavedMovies = allSavedMovies.filter(movie => movie.owner === currentUser._id)
+        setSavedMovies(mySavedMovies)
+        localStorage.setItem('savedMovies', mySavedMovies);
+        //setSavedMovies(movies.map((item) => { return { ...item, id: item.movieId }}))
+        // localStorage.setItem('savedMovies', JSON.stringify(movies));
       })
       .catch((err) => {
         console.log(err);

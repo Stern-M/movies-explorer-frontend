@@ -11,6 +11,7 @@ class MainApi {
     return Promise.reject(new Error(`Ошибка: ${res.statusText}`))
   }
 
+  //регистрация
   register(password, email, name) {
     return fetch(`${this._url}/signup`, {
       method: 'POST',
@@ -22,6 +23,7 @@ class MainApi {
     .then(this._onError)
   }
   
+  //авторизация
   authorize(password, email) {
     return fetch(`${this._url}/signin`, {
       method: 'POST',
@@ -98,7 +100,7 @@ class MainApi {
         nameEN: data.nameEN || 'No name',
       }),
     })
-    .then(this._onError)
+      .then(this._onError)
   }
 
   //удаление карточки с сервера
