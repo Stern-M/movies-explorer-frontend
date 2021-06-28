@@ -129,11 +129,11 @@ function App() {
     setShortFilter(!shortFilter)
   }
 
-  //запрос всех фильмов
-  useEffect(() => {
-    if (loggedIn) {
-      setLoader('preloader_active')
-      moviesApi.getAllMovies()
+  //запрос фильмов с moviesApi
+  function getAllMovies() {
+    setLoader('preloader_active')
+    moviesApi
+    .getAllMovies()
       .then((movies) => {
         setAllMovies(movies.map((item) => {
           const imageURL = item.image ? item.image.url : '';
@@ -148,20 +148,21 @@ function App() {
       .catch((err) => {
         console.log(err);
       })
-      .finally(() => setLoader(''));}
-  }, [loggedIn]);
+      .finally(() => setLoader(''))
+  }
 
   function getSavedMovies() {
+    setLoader('preloader_active')
     api
       .getSavedMovies()
-      .then((data) => {
-        const savedArray = data.map((item) => ({ ...item, id: item.movieId }));
-        localStorage.setItem('savedMovies', JSON.stringify(savedArray));
-        setSavedMovies(savedArray);
+      .then((movies) => {
+        setSavedMovies(movies.map((item) => { return { ...item, id: item.movieId }}))
+        localStorage.setItem('savedMovies', JSON.stringify(movies));
       })
       .catch((err) => {
         console.log(err);
       })
+      .finally(() => setLoader(''))
       // .catch(() => {
       //   // setLoadingError('Во время запроса произошла ошибка. '
       //   //   + 'Возможно, проблема с соединением или сервер недоступен. '
@@ -171,7 +172,8 @@ function App() {
 
   useEffect(() => {
     if (loggedIn) {
-      getSavedMovies()
+      getSavedMovies();
+      getAllMovies()
     }
   }, [loggedIn])
 
@@ -187,17 +189,17 @@ function App() {
   }
 
   //поиск фильмов либо среди сохраненных, либо среди всех фильмов (в зависимости от pathname)
-  function findMovie(search) {
+  function findMovie(searcInput) {
     setFirstSearch(false)
     setLoader('preloader_active')
     showExactMoviesAmount()
     if (pathname === "/movies") {
       setFindedMoves(allMovies.filter((movie) => {
-        return movie.nameRU.toLowerCase().includes(search.toLowerCase());
+        return movie.nameRU.toLowerCase().includes(searcInput.toLowerCase());
       }))
     } else {
       setFindedMoves(savedMovies.filter((movie) => {
-        return movie.nameRU.toLowerCase().includes(search.toLowerCase())
+        return movie.nameRU.toLowerCase().includes(searcInput.toLowerCase())
       }))
     }
     setLoader('')
@@ -219,24 +221,64 @@ function App() {
       });
   };
 
-  //удалеие из сохраненных
   function removeFromSaved(movie) {
     const movieForDel = savedMovies.find((item) => item.id === movie.id);
     const movieId = movieForDel._id;
-    console.log(movieId)
     api
       .removeFromSavedMovies(movieId)
       .then((res) => {
         if (res) {
-          const newSavedMovies = savedMovies.filter((item) => item.movieId !== res.movieId);
-          setSavedMovies(newSavedMovies);
-          localStorage.setItem('savedMovies', newSavedMovies)
+          if (pathname === "/movies") {
+            getSavedMovies()
+            getAllMovies()
+          } else {
+            getSavedMovies()
+          getAllMovies()
+          setFindedMoves(savedMovies.filter((movie) => {
+            return !movie.nameRU.toLowerCase().includes(movieForDel.nameRU.toLowerCase())
+          }))
+          // findMovie(movie.nameRU)
+          }
+          
         }
+        // const newSavedMovies = savedMovies.filter((item) => item.movieId !== res.movieId);
+        // setSavedMovies(newSavedMovies);
+        // localStorage.setItem('savedMovies', newSavedMovies);
+        // setFindedMoves(findedMovies)
       })
       .catch((err) => {
         console.error(err);
       });
   };
+
+  //удаление из сохраненных
+  // function removeFromSaved(movie) {
+  //   const movieForDel = savedMovies.find((item) => item.id === movie.id);
+  //   const movieId = movieForDel._id;
+  //   api
+  //     .removeFromSavedMovies(movieId)
+  //     .then((res) => {
+  //       if (res) {
+  //         if (pathname === "/movies") {
+  //           getSavedMovies()
+  //           getAllMovies()
+  //         }
+  //           getSavedMovies()
+  //           getAllMovies()
+  //           findMovie(movie.nameRU)
+  //         }
+          
+
+          
+  //         // const newSavedMovies = savedMovies.filter((item) => item.movieId !== res.movieId);
+  //         // setSavedMovies(newSavedMovies);
+  //         // localStorage.setItem('savedMovies', newSavedMovies);
+  //         // setFindedMoves(findedMovies)
+  //       })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+  // };
 
   function closeAllPopups() {
     setInfoPopupOpen(false)
@@ -274,7 +316,7 @@ function App() {
 
   
   //опеределяем нужно сохранить или удалить по клику
-  const saveDeleteMovieHandler = (movie, movieId, isAdded) => (isAdded ? removeFromSaved(movie, movieId) : addToSaved(movie) );
+  const saveDeleteMovieHandler = (movie, isAdded) => (isAdded ? removeFromSaved(movie) : addToSaved(movie) );
 
   //выход из аккаунта
   function signOut() {

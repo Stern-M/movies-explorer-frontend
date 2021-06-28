@@ -6,7 +6,7 @@ import delIcon from '../../images/del-icon.svg';
 import savedIcon from '../../images/saved-icon.svg';
 
 
-function MoviesCard({movie, addToSaved, isMovieAdded, saveDeleteMovieHandler}) {
+function MoviesCard({movie, isMovieAdded, saveDeleteMovieHandler}) {
   const { pathname } = useLocation();
   
   const {
@@ -19,7 +19,7 @@ function MoviesCard({movie, addToSaved, isMovieAdded, saveDeleteMovieHandler}) {
 
   function handleIconClick(evt) {
     evt.preventDefault();
-    saveDeleteMovieHandler(movie, movie._id, isAdded);
+    saveDeleteMovieHandler(movie, isAdded);
   };
   
   return (

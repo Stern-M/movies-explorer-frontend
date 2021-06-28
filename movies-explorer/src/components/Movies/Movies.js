@@ -18,7 +18,8 @@ function Movies({
   addToSaved,
   isMovieAdded,
   loader,
-  saveDeleteMovieHandler}) {
+  saveDeleteMovieHandler,
+  removeFromSaved}) {
 
   return(
     <>
@@ -33,7 +34,8 @@ function Movies({
           search={firstSearch}
           addToSaved={addToSaved}
           isMovieAdded={isMovieAdded}
-          saveDeleteMovieHandler={saveDeleteMovieHandler}/>
+          saveDeleteMovieHandler={saveDeleteMovieHandler}
+          removeFromSaved={removeFromSaved}/>
       < Preloader loader={loader}/>
       < Footer />
     </>
