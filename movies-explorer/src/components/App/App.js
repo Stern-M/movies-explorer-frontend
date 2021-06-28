@@ -221,6 +221,7 @@ function App() {
       });
   };
 
+  //удаление из сохраненных
   function removeFromSaved(movie) {
     const movieForDel = savedMovies.find((item) => item.id === movie.id);
     const movieId = movieForDel._id;
@@ -237,48 +238,13 @@ function App() {
           setFindedMoves(savedMovies.filter((movie) => {
             return !movie.nameRU.toLowerCase().includes(movieForDel.nameRU.toLowerCase())
           }))
-          // findMovie(movie.nameRU)
           }
-          
         }
-        // const newSavedMovies = savedMovies.filter((item) => item.movieId !== res.movieId);
-        // setSavedMovies(newSavedMovies);
-        // localStorage.setItem('savedMovies', newSavedMovies);
-        // setFindedMoves(findedMovies)
       })
       .catch((err) => {
         console.error(err);
       });
   };
-
-  //удаление из сохраненных
-  // function removeFromSaved(movie) {
-  //   const movieForDel = savedMovies.find((item) => item.id === movie.id);
-  //   const movieId = movieForDel._id;
-  //   api
-  //     .removeFromSavedMovies(movieId)
-  //     .then((res) => {
-  //       if (res) {
-  //         if (pathname === "/movies") {
-  //           getSavedMovies()
-  //           getAllMovies()
-  //         }
-  //           getSavedMovies()
-  //           getAllMovies()
-  //           findMovie(movie.nameRU)
-  //         }
-          
-
-          
-  //         // const newSavedMovies = savedMovies.filter((item) => item.movieId !== res.movieId);
-  //         // setSavedMovies(newSavedMovies);
-  //         // localStorage.setItem('savedMovies', newSavedMovies);
-  //         // setFindedMoves(findedMovies)
-  //       })
-  //     .catch((err) => {
-  //       console.error(err);
-  //     });
-  // };
 
   function closeAllPopups() {
     setInfoPopupOpen(false)

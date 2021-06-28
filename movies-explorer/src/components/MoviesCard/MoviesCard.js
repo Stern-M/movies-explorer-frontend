@@ -13,6 +13,12 @@ function MoviesCard({movie, isMovieAdded, saveDeleteMovieHandler}) {
     nameRU, duration, trailer, image,
   } = movie;
 
+  function setDuration() {
+    const hours = Math.trunc(duration / 60);
+    const minutes = duration % 60;
+    return `${hours > 0 ? `${hours}ч ` : ''}${minutes}м`
+  }
+
   const isAdded = (pathname === "/saved-movies" ? true : isMovieAdded(movie)) ;
   const saveIconButton = (isAdded ? savedIcon : saveIcon)
   const cardIcon = (pathname === "/movies" ? saveIconButton : delIcon)
@@ -27,15 +33,13 @@ function MoviesCard({movie, isMovieAdded, saveDeleteMovieHandler}) {
       <div className="movie__container">
         <div className="movie__description">
           <h3 className="movie__title">{nameRU}</h3>
-          <span className="movie__duration">{duration} мин.</span>
+          <span className="movie__duration">{setDuration()}</span>
         </div>
         <button type="button" className="movie__button" >
-          <img src={cardIcon} alt="избранное" className="movie__save-icon" onClick={handleIconClick}/>
+          <img src={cardIcon} alt="избранное" className="movie__save-icon" onClick={handleIconClick} />
         </button>
-        
       </div>
       <img src={image} alt={nameRU} className="movie__image" />
-      
     </li>
   );
 }
