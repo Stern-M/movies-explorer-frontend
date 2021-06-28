@@ -102,10 +102,14 @@ class MainApi {
   }
 
   //удаление карточки с сервера
-  removeCard(id){
-    return fetch(`${this._url}/cards/${id}`, {
-      method: "DELETE",
-      headers: this._headers
+  removeFromSavedMovies(movieId) {
+    return fetch(`${this._url}/movies/${movieId}`, {
+      method: 'DELETE',
+      headers: {
+        authorization: `Bearer ${localStorage.getItem('jwt')}`,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
     })
     .then(this._onError)
   }

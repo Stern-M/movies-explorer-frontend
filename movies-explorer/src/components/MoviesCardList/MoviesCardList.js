@@ -2,7 +2,15 @@ import React from "react";
 import "./MoviesCardList.css";
 import MoviesCard from "../MoviesCard/MoviesCard";
 
-function MoviesCardList({movies, moviesAmount, setMoviesAmount, search, addToSaved, isMovieAdded}) {
+function MoviesCardList({
+  movies,
+  moviesAmount,
+  setMoviesAmount,
+  search,
+  addToSaved,
+  isMovieAdded,
+  saveDeleteMovieHandler}) {
+
   if (search) {
     return (
       <section className="movies">
@@ -23,7 +31,12 @@ function MoviesCardList({movies, moviesAmount, setMoviesAmount, search, addToSav
     <section className="movies">
       <ul className="movies__list">
         {movies.slice(0, moviesAmount.startCard).map(card => {
-          return <MoviesCard movie={card} addToSaved={addToSaved} isMovieAdded={isMovieAdded}/>
+          return <MoviesCard
+            movie={card}
+            addToSaved={addToSaved}
+            isMovieAdded={isMovieAdded}
+            saveDeleteMovieHandler={saveDeleteMovieHandler}
+            key={card.id}/>
         })}
       </ul>
       <button

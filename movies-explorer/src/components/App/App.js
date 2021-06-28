@@ -1,5 +1,5 @@
 import React, { useEffect, useState} from 'react';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import '../../components/App/App.css';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import { CurrentUserContext } from '../../context/CurrentUserContext';
@@ -13,14 +13,22 @@ import Register from '../Register/Register';
 import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import Preloader from '../Preloader/Preloader';
 import { api } from '../../utils/MainApi';
+import { moviesApi } from '../../utils/MoviesApi';
 
 function App() {
   const [currentUser, setCurrentUser] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
   const [isInfoPopupOpen, setInfoPopupOpen] = useState(false);
   const [registerStatus, setRegisterStatus] = useState(false);
-  const [loader, setLoader] = useState('')
+  const [loader, setLoader] = useState('');
+  const [firstSearch, setFirstSearch] = useState(true); //поиск еще не выполнялся
+  const [allMovies, setAllMovies] = useState([]); // все фильмы с сервера https://api.nomoreparties.co/beatfilm-movies
+  const [findedMovies, setFindedMoves] = useState([]); // фильмы после поиска
+  const [savedMovies, setSavedMovies] = useState([]); // сохраненные фильмы
+  const [moviesAmount, setMoviesAmount] = useState({startCard: 0, rowCard: 0, moreCard: 0});
+  const [shortFilter, setShortFilter] = useState(false); // фильтр короткометражек
   const history = useHistory();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     tokenCheck()
@@ -32,6 +40,11 @@ function App() {
     }
   }, [loggedIn])
 
+  useEffect(() => {
+    setFindedMoves([])
+  }, [pathname])
+
+  //авторизация
   const handleLogin = (password, email) => {
     setLoader('preloader_active')
     return api.authorize(password, email)
@@ -39,7 +52,6 @@ function App() {
         localStorage.setItem('jwt', data.token)
         setLoggedIn(true)
         setCurrentUser(data)
-        tokenCheck()
         history.push('/movies')
       })
       .catch((data) => {
@@ -64,6 +76,7 @@ function App() {
       })
   }
 
+  //регистрация
   function handleRegister(password, email, name) {
     setLoader('preloader_active')
     return api.register(password, email, name)
@@ -112,17 +125,118 @@ function App() {
     }
   }
 
-  //запрос данных юзера (совершается после loggedIn = true)
-  // useEffect(() => {
-  //   if (loggedIn) 
-  //   {api.getContent(localStorage.getItem('jwt'))
-  //     .then((userInfo) => {
-  //       setCurrentUser(userInfo);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });}
-  // }, [loggedIn]);
+  function handleShortFilter() {
+    setShortFilter(!shortFilter)
+  }
+
+  //запрос всех фильмов
+  useEffect(() => {
+    if (loggedIn) {
+      setLoader('preloader_active')
+      moviesApi.getAllMovies()
+      .then((movies) => {
+        setAllMovies(movies.map((item) => {
+          const imageURL = item.image ? item.image.url : '';
+          return {
+            ...item,
+            image: `https://api.nomoreparties.co${imageURL}`,
+            trailer: item.trailerLink,
+          };
+        }))
+        localStorage.setItem('movies', JSON.stringify(movies))
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => setLoader(''));}
+  }, [loggedIn]);
+
+  function getSavedMovies() {
+    api
+      .getSavedMovies()
+      .then((data) => {
+        const savedArray = data.map((item) => ({ ...item, id: item.movieId }));
+        localStorage.setItem('savedMovies', JSON.stringify(savedArray));
+        setSavedMovies(savedArray);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      // .catch(() => {
+      //   // setLoadingError('Во время запроса произошла ошибка. '
+      //   //   + 'Возможно, проблема с соединением или сервер недоступен. '
+      //   //   + 'Подождите немного и попробуйте ещё раз');
+      // });
+  };
+
+  useEffect(() => {
+    if (loggedIn) {
+      getSavedMovies()
+    }
+  }, [loggedIn])
+
+  //показ определенного кол-ва карточек с фильмами
+  function showExactMoviesAmount() {
+    if(window.screen.width < 400){
+      setMoviesAmount({startCard: 5, rowCard: 1, moreCard: 2})
+    } else if(window.screen.width < 768){
+      setMoviesAmount({startCard: 8, rowCard: 2, moreCard: 2})
+    } else {
+      setMoviesAmount({startCard: 12, rowCard: 3, moreCard: 3})
+    }
+  }
+
+  //поиск фильмов либо среди сохраненных, либо среди всех фильмов (в зависимости от pathname)
+  function findMovie(search) {
+    setFirstSearch(false)
+    setLoader('preloader_active')
+    showExactMoviesAmount()
+    if (pathname === "/movies") {
+      setFindedMoves(allMovies.filter((movie) => {
+        return movie.nameRU.toLowerCase().includes(search.toLowerCase());
+      }))
+    } else {
+      setFindedMoves(savedMovies.filter((movie) => {
+        return movie.nameRU.toLowerCase().includes(search.toLowerCase())
+      }))
+    }
+    setLoader('')
+  }
+
+  //поиск короткометражек среди отфильтрованных фильмов
+  const shortMovies = (findedMovies) => findedMovies.filter((movie) =>  movie.duration < 40)
+
+  //добавление в сохраненные
+  function addToSaved(movie) {
+    api
+      .addToSavedMovies(movie)
+      .then((res) => {
+        setSavedMovies([...savedMovies, { ...res, id: res.movieId }]);
+        localStorage.setItem('savedMovies', savedMovies)
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  //удалеие из сохраненных
+  function removeFromSaved(movie) {
+    const movieForDel = savedMovies.find((item) => item.id === movie.id);
+    const movieId = movieForDel._id;
+    console.log(movieId)
+    api
+      .removeFromSavedMovies(movieId)
+      .then((res) => {
+        if (res) {
+          const newSavedMovies = savedMovies.filter((item) => item.movieId !== res.movieId);
+          setSavedMovies(newSavedMovies);
+          localStorage.setItem('savedMovies', newSavedMovies)
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   function closeAllPopups() {
     setInfoPopupOpen(false)
@@ -141,37 +255,28 @@ function App() {
       })
   }
 
+  //закрытие по Esc
   function onEscClose(e) {
     if (e.key === "Escape") {
       closeAllPopups();
     }
   }
 
+  //закрытие по овелею
   function onOverlayClose(e) {
     if (e.target.classList.contains('popup_visible')) {
       closeAllPopups();
     }
   }
 
-  function isMovieAdded(movie) {
-    if (localStorage.getItem('savedMoves')) {
-      localStorage.getItem('savedMoves').some((item) => item.id === movie.id)
-    }
-  }
+  //проверка сохранен ли фильм, чтобы на роуте movies отразить закладку
+  const isMovieAdded = (movie) => savedMovies.some((item) => item.id === movie.id)
 
-  //функция для вывода прелоадера в момент загрузки или изменения
-  //ПЕРЕПИСАТЬ!!!
-  // function submitRender(popupSelector, isLoading) {
-  //   const buttonElement = document.querySelector(popupSelector).querySelector('.popup__button');
-  //   if (isLoading) {
-  //     buttonElement.textContent = "Сохранение...";
-  //   } else {
-  //     if (popupSelector === '.popup__adding') {
-  //       buttonElement.textContent = "Создать";
-  //     } else { buttonElement.textContent = "Сохранить"; }
-  //   }
-  // }
+  
+  //опеределяем нужно сохранить или удалить по клику
+  const saveDeleteMovieHandler = (movie, movieId, isAdded) => (isAdded ? removeFromSaved(movie, movieId) : addToSaved(movie) );
 
+  //выход из аккаунта
   function signOut() {
     localStorage.clear();
     setLoggedIn(false);
@@ -190,11 +295,31 @@ function App() {
             path="/movies"
             component={Movies}
             loggedIn={loggedIn}
-            isMovieAdded={isMovieAdded}/>
+            isMovieAdded={isMovieAdded}
+            findMovie={findMovie}
+            handleShortFilter={handleShortFilter}
+            shortMovies={shortMovies}
+            shortFilter={shortFilter}
+            findedMovies={findedMovies}
+            moviesAmount={moviesAmount}
+            setMoviesAmount={setMoviesAmount}
+            firstSearch={firstSearch}
+            addToSaved={addToSaved}
+            loader={loader}
+            saveDeleteMovieHandler={saveDeleteMovieHandler}/>
           <ProtectedRoute exact
             path="/saved-movies"
             component={SavedMovies}
-            loggedIn={loggedIn}/>
+            loggedIn={loggedIn}
+            moviesAmount={moviesAmount}
+            setMoviesAmount={setMoviesAmount}
+            findedMovies={findedMovies}
+            handleShortFilter={handleShortFilter}
+            shortFilter={shortFilter}
+            shortMovies={shortMovies}
+            firstSearch={firstSearch}
+            findMovie={findMovie}
+            saveDeleteMovieHandler={saveDeleteMovieHandler}/>
           <ProtectedRoute exact
             path="/profile"
             component={Profile}

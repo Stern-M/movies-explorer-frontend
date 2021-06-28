@@ -6,20 +6,20 @@ import delIcon from '../../images/del-icon.svg';
 import savedIcon from '../../images/saved-icon.svg';
 
 
-function MoviesCard({movie, addToSaved, isMovieAdded}) {
+function MoviesCard({movie, addToSaved, isMovieAdded, saveDeleteMovieHandler}) {
   const { pathname } = useLocation();
-  // состояние isAdded будет задаваться
-  //const isAdded = props.isAdded;
+  
   const {
     nameRU, duration, trailer, image,
   } = movie;
-  const isAdded = isMovieAdded(movie);
+
+  const isAdded = (pathname === "/saved-movies" ? true : isMovieAdded(movie)) ;
   const saveIconButton = (isAdded ? savedIcon : saveIcon)
   const cardIcon = (pathname === "/movies" ? saveIconButton : delIcon)
 
-  const handleBookmarkClick = (e) => {
-    e.preventDefault();
-    addToSaved(movie, !isAdded);
+  function handleIconClick(evt) {
+    evt.preventDefault();
+    saveDeleteMovieHandler(movie, movie._id, isAdded);
   };
   
   return (
@@ -30,7 +30,7 @@ function MoviesCard({movie, addToSaved, isMovieAdded}) {
           <span className="movie__duration">{duration} мин.</span>
         </div>
         <button type="button" className="movie__button" >
-          <img src={cardIcon} alt="избранное" className="movie__save-icon" onClick={handleBookmarkClick}/>
+          <img src={cardIcon} alt="избранное" className="movie__save-icon" onClick={handleIconClick}/>
         </button>
         
       </div>

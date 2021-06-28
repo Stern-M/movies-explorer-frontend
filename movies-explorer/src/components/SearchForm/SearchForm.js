@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 
-function SearchForm (props) {
+function SearchForm ({findMovie, shortFilter}) {
   const [input, setInput] = useState('');
 
   function handleChangeInput(e) {
@@ -12,7 +12,7 @@ function SearchForm (props) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    props.findMovie(input)
+    findMovie(input)
   }
 
   return (
@@ -24,7 +24,7 @@ function SearchForm (props) {
             type="text"
             className="search-form__input"
             placeholder="Фильм"
-            required="true"
+            // required="true"
             minLength="1"
             maxLength="150"
             size="1"
@@ -32,7 +32,7 @@ function SearchForm (props) {
           />
           <button type="submit" className="search-form__button"></button>
         </div>
-        <FilterCheckbox shortFilter={props.shortFilter}/>
+        <FilterCheckbox shortFilter={shortFilter}/>
       </form>
     </section>
   );
