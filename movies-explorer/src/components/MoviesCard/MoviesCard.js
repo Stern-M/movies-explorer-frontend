@@ -39,7 +39,9 @@ function MoviesCard({movie, isMovieAdded, saveDeleteMovieHandler}) {
           <img src={cardIcon} alt="избранное" className="movie__save-icon" onClick={handleIconClick} />
         </button>
       </div>
-      <img src={image} alt={nameRU} className="movie__image" />
+      <a href={trailer} className="card__trailer-link" rel="noreferrer" target="_blank">
+        <img src={image} alt={nameRU} className="movie__image" />
+      </a>
     </li>
   );
 }

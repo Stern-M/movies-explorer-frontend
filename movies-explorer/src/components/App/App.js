@@ -31,20 +31,6 @@ function App() {
   const history = useHistory();
   const { pathname } = useLocation();
 
-  useEffect(() => {
-    tokenCheck()
-  }, [])
-
-  // useEffect(() => {
-  //   if (loggedIn) {
-  //     history.push("/movies");
-  //   }
-  // }, [loggedIn])
-
-  useEffect(() => {
-    localStorage.setItem('savedMovies', JSON.stringify(savedMovies));
-    //console.log(savedMovies)
-  }, [savedMovies])
 
   useEffect(() => {
     setFindedMoves([])
@@ -113,14 +99,14 @@ function App() {
   }
 
   const tokenCheck = () => {
-    if (localStorage.getItem('jwt')) {
+    let token = localStorage.getItem('jwt');
+    if (token) {
       setLoader('preloader_active')
-      let token = localStorage.getItem('jwt');
       api.getUserContent(token)
         .then((userData) => {
           if (userData) {
-            setLoggedIn(true)
             setCurrentUser(userData)
+            setLoggedIn(true)
             localStorage.setItem('currentUser', JSON.stringify(userData));
           }
         })
@@ -135,31 +121,6 @@ function App() {
     setShortFilter(!shortFilter)
   }
 
-  //запрос фильмов с moviesApi
-  // function getAllMovies() {
-  //   setLoader('preloader_active')
-  //   if (!localStorage.getItem('movies')) {
-  //   moviesApi
-  //   .getAllMovies()
-  //     .then((movies) => {
-  //       setAllMovies(movies.map((item) => {
-  //         const imageURL = item.image ? item.image.url : '';
-  //         return {
-  //           ...item,
-  //           image: `https://api.nomoreparties.co${imageURL}`,
-  //           trailer: item.trailerLink,
-  //         };
-  //       }))
-  //       localStorage.setItem('movies', JSON.stringify(movies))
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     })
-  //     .finally(() => setLoader(''))
-  //   } else {
-  //     setAllMovies(localStorage.getItem('movies'))
-  //   }
-  // }
   function getAllMovies() {
     setLoader('preloader_active')
     moviesApi
@@ -189,9 +150,8 @@ function App() {
       .getSavedMovies()
       .then((movies) => {
         const allSavedMovies = movies.map((item) => { return { ...item, id: item.movieId }})
-        const mySavedMovies = allSavedMovies.filter(movie => movie.owner === currentUser._id)
-        setSavedMovies(mySavedMovies)
-        //localStorage.setItem('savedMovies', JSON.stringify(mySavedMovies));
+        setSavedMovies(allSavedMovies.filter((movie) =>  { return movie.owner.includes(currentUser._id)}))
+        localStorage.setItem('savedMovies', JSON.stringify(allSavedMovies.filter((movie) =>  { return movie.owner.includes(currentUser._id)})))
       })
       .catch(() => {
         setLoadingError('Во время запроса произошла ошибка. '
@@ -199,8 +159,11 @@ function App() {
           + 'Подождите немного и попробуйте ещё раз');
       })
       .finally(() => setLoader(''))
-      
   };
+
+  useEffect(() => {
+    tokenCheck()
+  }, [])
 
   useEffect(() => {
     if (loggedIn) {
@@ -208,6 +171,14 @@ function App() {
       getAllMovies()
     }
   }, [loggedIn])
+
+  useEffect(() => {
+    localStorage.setItem('savedMovies', JSON.stringify(savedMovies));
+  }, [savedMovies, loggedIn])
+
+  useEffect(() => {
+    localStorage.setItem('currentUser', JSON.stringify(currentUser))
+  }, [currentUser])
 
   //показ определенного кол-ва карточек с фильмами
   function showExactMoviesAmount() {
@@ -246,32 +217,13 @@ function App() {
       .addToSavedMovies(movie)
       .then((res) => {
         setSavedMovies([...savedMovies, { ...res, id: res.movieId }]);
-        //localStorage.setItem('savedMovies', JSON.stringify(savedMovies))
       })
       .catch((err) => {
         console.error(err);
       });
   };
 
-  // function removeFromSaved(movie) {
-  //   const movieForDel = savedMovies.find((item) => item.id === movie.id);
-  //   const movieId = movieForDel._id;
-  //   api
-  //     .removeFromSavedMovies(movieId)
-  //     .then(() => {
-  //         const updatedSavedMovies = savedMovies.filter((movie) => {
-  //           return movie.id !== movieId
-  //         })
-  //         setSavedMovies(updatedSavedMovies)
-          
-  //         //localStorage.setItem('savedMovies', JSON.stringify(updatedSavedMovies))
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //     });
-  // };
-
-  // удаление из сохраненных
+  // удаление из сохраненных 
   function removeFromSaved(movie, findedMovies) {
     const movieForDel = savedMovies.find((item) => item.id === movie.id);
     const movieId = movieForDel._id;
@@ -280,14 +232,10 @@ function App() {
       .then((res) => {
         if (res) {
           if (pathname === "/movies") {
-            const updatedSavedMovies = savedMovies.filter((movie) => {
-              return movie._id !== movieId})
+            const updatedSavedMovies = savedMovies.filter((movie) => { return movie._id !== movieId})
             setSavedMovies(updatedSavedMovies)
-            //localStorage.setItem('savedMovies', JSON.stringify(updatedSavedMovies))
           } else {
-            const updatedSavedMovies = savedMovies.filter((movie) => {
-              return movie._id !== movieId})
-              console.log(updatedSavedMovies)
+            const updatedSavedMovies = savedMovies.filter((movie) => { return movie._id !== movieId})
             setSavedMovies(updatedSavedMovies)
             const updatedFilteredMovies = findedMovies.filter((movie) => {
               return !movie.nameRU.toLowerCase().includes(movieForDel.nameRU.toLowerCase())})
@@ -300,25 +248,6 @@ function App() {
       });
   };
 
-  // function removeFromSaved(movie) {
-  //   const movieForDel = savedMovies.find((item) => item.id === movie.id);
-  //   const movieId = movieForDel._id;
-  //   api
-  //     .removeFromSavedMovies(movieId)
-  //     .then((res) => {
-  //       if (res) {
-  //         const updatedSavedMovies = savedMovies.filter((movie) => {
-  //           return movie.id !== movieId
-  //         })
-  //         setSavedMovies(updatedSavedMovies)
-          
-  //         //localStorage.setItem('savedMovies', JSON.stringify(updatedSavedMovies))
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.error(err);
-  //     });
-  // };
 
   function closeAllPopups() {
     setInfoPopupOpen(false)
@@ -354,7 +283,6 @@ function App() {
   //проверка сохранен ли фильм, чтобы на роуте movies отразить закладку
   const isMovieAdded = (movie) => savedMovies.some((item) => item.id === movie.id)
 
-  
   //опеределяем нужно сохранить или удалить по клику
   const saveDeleteMovieHandler = (movie, isAdded) => (isAdded ? removeFromSaved(movie, findedMovies) : addToSaved(movie) );
 
