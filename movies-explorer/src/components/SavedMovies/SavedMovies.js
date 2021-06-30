@@ -14,7 +14,8 @@ function SavedMovies({
   loggedIn,
   findMovie,
   handleShortFilter,
-  saveDeleteMovieHandler}) {
+  saveDeleteMovieHandler,
+  loadingError}) {
 
   return (
     <>
@@ -27,7 +28,8 @@ function SavedMovies({
           moviesAmount={moviesAmount}
           setMoviesAmount={setMoviesAmount}
           search={firstSearch}
-          saveDeleteMovieHandler={saveDeleteMovieHandler}/>
+          saveDeleteMovieHandler={saveDeleteMovieHandler}
+          loadingError={loadingError}/>
       < Footer />
     </>
   )

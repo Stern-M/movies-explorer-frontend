@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "./Navigation.css";
 
 function Navigation() {
@@ -7,14 +7,14 @@ function Navigation() {
     <nav className="navigation">
       <ul className="navigation__list">
         <li className="navigation__list-item">
-          <Link className="navigation__movies" to="/movies">
+          <NavLink className="navigation__movies" activeClassName="navigation__movies_active" to="/movies">
             Фильмы
-          </Link>
+          </NavLink>
         </li>
         <li className="navigation__list-item"> 
-          <Link className="navigation__saved-movies" to="/saved-movies">
+          <NavLink className="navigation__movies" activeClassName="navigation__movies_active" to="/saved-movies">
             Сохранённые фильмы
-          </Link>
+          </NavLink>
         </li>
       </ul>
     </nav>

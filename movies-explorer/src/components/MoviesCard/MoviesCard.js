@@ -31,7 +31,7 @@ function MoviesCard({movie, isMovieAdded, saveDeleteMovieHandler}) {
   return (
     <li className="movie">
       <div className="movie__container">
-        <div className="movie__description">
+        <div className="movie__description movie__meta-container">
           <h3 className="movie__title">{nameRU}</h3>
           <span className="movie__duration">{setDuration()}</span>
         </div>

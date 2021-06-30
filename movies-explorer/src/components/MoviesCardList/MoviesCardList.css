@@ -46,8 +46,10 @@
 }
 
 .movies__not-found {
-  /* display: none; */
-  margin: 0 0 40px;
+  font-family: 'Inter', sans-serif;
+  margin: 40px 0 40px;
+  font-size: 20px;
+  color: #000;
 }
 
 

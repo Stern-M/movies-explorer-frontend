@@ -9,12 +9,21 @@ function MoviesCardList({
   search,
   addToSaved,
   isMovieAdded,
-  saveDeleteMovieHandler}) {
+  saveDeleteMovieHandler,
+  loadingError}) {
 
   if (search) {
     return (
       <section className="movies">
         <p className="movies__not-found">Начнем поиск?</p>
+      </section>
+    )
+  }
+
+  if (loadingError !== '') {
+    return (
+      <section className="movies">
+        <p className="movies__not-found">{loadingError}</p>
       </section>
     )
   }

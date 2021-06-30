@@ -19,7 +19,8 @@ function Movies({
   isMovieAdded,
   loader,
   saveDeleteMovieHandler,
-  removeFromSaved}) {
+  removeFromSaved,
+  loadingError}) {
 
   return(
     <>
@@ -35,7 +36,8 @@ function Movies({
           addToSaved={addToSaved}
           isMovieAdded={isMovieAdded}
           saveDeleteMovieHandler={saveDeleteMovieHandler}
-          removeFromSaved={removeFromSaved}/>
+          removeFromSaved={removeFromSaved}
+          loadingError={loadingError}/>
       < Preloader loader={loader}/>
       < Footer />
     </>
