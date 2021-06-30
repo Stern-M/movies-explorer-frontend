@@ -13,12 +13,12 @@ function InfoTooltip(props) {
           props.status ? (
             <>
             <img className="popup__result-logo" alt="произошла ошибка" src={errorStatus}></img>
-            <h2 className="popup__title popup__title-result">Что-то пошло не так! Попробуйте ещё раз.</h2>
+            <h2 className="popup__title popup__title-result">{props.infoPopup}</h2>
             </>
           ) : (
             <>
             <img className="popup__result-logo" alt="вы зарегистрировались" src={successStatus}></img>
-            <h2 className="popup__title popup__title-result">Вы успешно зарегистрировались!</h2>
+            <h2 className="popup__title popup__title-result">{props.infoPopup}</h2>
             </>
           )
         }

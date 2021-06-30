@@ -27,7 +27,8 @@ function App() {
   const [savedMovies, setSavedMovies] = useState([]); // сохраненные фильмы
   const [moviesAmount, setMoviesAmount] = useState({startCard: 0, rowCard: 0, moreCard: 0});
   const [shortFilter, setShortFilter] = useState(false); // фильтр короткометражек
-  const [loadingError, setLoadingError] = React.useState('');
+  const [loadingError, setLoadingError] = useState('');
+  const [infoPopup, setInfoPopup] = useState('');
   const history = useHistory();
   const { pathname } = useLocation();
 
@@ -44,23 +45,25 @@ function App() {
         localStorage.setItem('jwt', data.token)
         setLoggedIn(true)
         setCurrentUser(data)
+        setInfoPopupOpen(true)
+        setInfoPopup('Добро пожаловать!')
         history.push('/movies')
       })
       .catch((data) => {
         if (data === 400) {
-          console.log('не передано одно из полей')
           setRegisterStatus(true)
           setInfoPopupOpen(true)
+          setInfoPopup('не передано одно из полей')
           return data;
         } if (data === 401) {
-          console.log('пользователь с email не найден')
           setRegisterStatus(true)
           setInfoPopupOpen(true)
+          setInfoPopup('пользователь с email не найден')
           return data;
         } else {
-          console.log('Что-то пошло не так')
           setRegisterStatus(true)
           setInfoPopupOpen(true)
+          setInfoPopup('Что-то пошло не так')
         }
       })
       .finally(() => {
@@ -76,21 +79,22 @@ function App() {
         handleLogin(password, email)
         setRegisterStatus(false)
         setInfoPopupOpen(true)
+        setInfoPopup('Вы успешно заригистрировались!')
       })
       .catch((res) => {
         if (!res || res === 400) {
-          console.log('некорректно заполнено одно из полей')
           setRegisterStatus(true)
           setInfoPopupOpen(true)
+          setInfoPopup('некорректно заполнено одно из полей')
           return res;
         } if (!res || res === 409) {
-          console.log('Пользователь с переданным email уже существует')
           setRegisterStatus(true)
           setInfoPopupOpen(true)
+          setInfoPopup('Пользователь с переданным email уже существует')
         } else {
-          console.log('Что-то пошло не так')
           setRegisterStatus(true)
           setInfoPopupOpen(true)
+          setInfoPopup('Что-то пошло не так')
         }
       })
       .finally(() => {
@@ -292,6 +296,8 @@ function App() {
     setLoggedIn(false);
     history.push('/');
     setCurrentUser('');
+    setInfoPopupOpen(true);
+    setInfoPopup('До свидания!');
   }
 
   return (
@@ -352,7 +358,8 @@ function App() {
         <InfoTooltip
           isOpen={isInfoPopupOpen}
           onClose={closeAllPopups}
-          status={registerStatus} />
+          status={registerStatus}
+          infoPopup={infoPopup}/>
         < Preloader loader={loader}/>
       </div>
     </CurrentUserContext.Provider>
