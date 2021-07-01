@@ -16,7 +16,8 @@ class MainApi {
     return fetch(`${this._url}/signup`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
       },
       body: JSON.stringify({password, email, name} )
     })
@@ -28,7 +29,8 @@ class MainApi {
     return fetch(`${this._url}/signin`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
       },
       body: JSON.stringify({password, email})
     })
@@ -41,7 +43,8 @@ class MainApi {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`,
+      Accept: 'application/json',
       }
     })
     .then(this._onError)
@@ -116,31 +119,10 @@ class MainApi {
     .then(this._onError)
   }
 
-  //поставить или снять лайк с карточки (по заданию 11 работы)
-  changeLikeCardStatus(id, isLiked, token) {
-    if (!isLiked) {
-      return fetch(`${this._url}/cards/${id}/likes`, {
-        method: "DELETE",
-        headers: 
-        {"content-type": "application/json",
-        "Authorization": `Bearer ${token}`}
-      })
-      .then(this._onError)
-    } else {
-      return fetch(`${this._url}/cards/${id}/likes`, {
-        method: "PUT",
-        headers: 
-        {"content-type": "application/json",
-        "Authorization": `Bearer ${token}`}
-      })
-      .then(this._onError)
-    }
-  }
-
 }
 
 export const api = new MainApi({
-  url: "http://localhost:3005",
+  url: "https://api.best-movies-ever.nomoredomains.icu",
   headers: {
     "content-type": "application/json",
     "Authorization": `Bearer ${localStorage.getItem('jwt')}`
