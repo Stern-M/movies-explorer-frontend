@@ -18,8 +18,7 @@ function Login(props) {
   function handleSubmit(e) {
     e.preventDefault();
     props.onLogin(password, email);
-    console.log(email, password)
-    formWithValidation.resetForm()
+    formWithValidation.resetForm();
   }
 
   const history = useHistory()
