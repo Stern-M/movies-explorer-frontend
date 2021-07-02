@@ -34,7 +34,8 @@ function App() {
 
 
   useEffect(() => {
-    setFindedMoves([])
+    setFindedMoves([]);
+    setShortFilter(false)
   }, [pathname])
 
   //авторизация
