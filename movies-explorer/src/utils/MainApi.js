@@ -64,7 +64,7 @@ class MainApi {
   }
 
   //изменение данных юзера на сервере
-  setUserData(name, email) {
+  setUserData(data) {
     return fetch(`${this._url}/users/me`, {
       method: 'PATCH',
       headers: {
@@ -72,10 +72,7 @@ class MainApi {
         'Content-type': 'application/json',
         Accept: 'application/json',
       },
-      body: JSON.stringify({
-        name,
-        email,
-      }),
+      body: JSON.stringify(data),
     })
     .then(this._onError)
   }

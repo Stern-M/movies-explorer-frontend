@@ -24,7 +24,9 @@ function Profile(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    props.onUpdateUser(values)
+    props.onUpdateUser({
+      name: values.name,
+      email: values.email})
   }
 
   return (

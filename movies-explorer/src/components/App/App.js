@@ -140,7 +140,7 @@ function App() {
         }))
         localStorage.setItem('movies', JSON.stringify(movies))
       })
-      .catch(() => {
+      .catch((err) => {
         setLoadingError('Во время запроса произошла ошибка. '
           + 'Возможно, проблема с соединением или сервер недоступен. '
           + 'Подождите немного и попробуйте ещё раз');
@@ -154,10 +154,9 @@ function App() {
       .getSavedMovies()
       .then((movies) => {
         const allSavedMovies = movies.map((item) => { return { ...item, id: item.movieId }})
-        setSavedMovies(allSavedMovies.filter((movie) =>  { return movie.owner.includes(currentUser._id)}))
-        localStorage.setItem('savedMovies', JSON.stringify(allSavedMovies.filter((movie) =>  { return movie.owner.includes(currentUser._id)})))
+        setSavedMovies(allSavedMovies)
       })
-      .catch(() => {
+      .catch((err) => {
         setLoadingError('Во время запроса произошла ошибка. '
           + 'Возможно, проблема с соединением или сервер недоступен. '
           + 'Подождите немного и попробуйте ещё раз');
@@ -224,6 +223,9 @@ function App() {
       })
       .catch((err) => {
         console.error(err);
+        setRegisterStatus(true)
+        setInfoPopupOpen(true)
+        setInfoPopup('Что-то пошло не так')
       });
   };
 
@@ -258,13 +260,20 @@ function App() {
   }
 
   //обновление данных юзера
-  function handleUpdateUser(name, email) {
+  function handleUpdateUser(data) {
     setLoader('preloader_active')
-    api.setUserData(name, email)
+    api.setUserData(data)
       .then((userInfo) => {
         setCurrentUser(userInfo);
+        setRegisterStatus(false)
+        setInfoPopupOpen(true)
+        setInfoPopup('Данные изменены!')
       })
-      .catch(err => console.log(err))
+      .catch((err) => {
+        console.log(err)
+        setRegisterStatus(true)
+        setInfoPopupOpen(true)
+        setInfoPopup('Что-то пошло не так')})
       .finally(() => {
         setLoader('');
       })
