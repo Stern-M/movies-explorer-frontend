@@ -14,6 +14,7 @@ import InfoTooltip from '../InfoTooltip/InfoTooltip';
 import Preloader from '../Preloader/Preloader';
 import { api } from '../../utils/MainApi';
 import { moviesApi } from '../../utils/MoviesApi';
+import { MOBILE_WIDTH, SHORT_MOVIE_DURATION, TABLET_WIDTH } from '../../utils/constants';
 
 function App() {
   const [currentUser, setCurrentUser] = useState("");
@@ -113,6 +114,11 @@ function App() {
             setCurrentUser(userData)
             setLoggedIn(true)
             localStorage.setItem('currentUser', JSON.stringify(userData));
+            if (pathname === '/signin' || pathname === '/signup') {
+              history.push('/movies');
+            } else {
+              history.push(pathname);
+            }
           }
         })
         .catch((err) => { console.log(err) })
@@ -141,7 +147,7 @@ function App() {
         }))
         localStorage.setItem('movies', JSON.stringify(movies))
       })
-      .catch((err) => {
+      .catch(() => {
         setLoadingError('Во время запроса произошла ошибка. '
           + 'Возможно, проблема с соединением или сервер недоступен. '
           + 'Подождите немного и попробуйте ещё раз');
@@ -157,7 +163,7 @@ function App() {
         const allSavedMovies = movies.map((item) => { return { ...item, id: item.movieId }})
         setSavedMovies(allSavedMovies)
       })
-      .catch((err) => {
+      .catch(() => {
         setLoadingError('Во время запроса произошла ошибка. '
           + 'Возможно, проблема с соединением или сервер недоступен. '
           + 'Подождите немного и попробуйте ещё раз');
@@ -169,6 +175,22 @@ function App() {
     tokenCheck()
   }, [])
 
+  // проверяем есть ли в localStorage данные по фильмам и сохраненным фильмам, чтобы не запрашивать каждый раз
+  useEffect(() => {
+    const allMovies = JSON.parse(localStorage.getItem('movies'));
+    if (allMovies) {
+      setAllMovies(allMovies);
+    } else {
+      getAllMovies();
+    }
+    const savedMovies = JSON.parse(localStorage.getItem('savedMovies'));
+    if (savedMovies) {
+      setSavedMovies(savedMovies);
+    } else {
+      getSavedMovies();
+    }
+  }, []);
+
   useEffect(() => {
     if (loggedIn) {
       getSavedMovies();
@@ -178,7 +200,7 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('savedMovies', JSON.stringify(savedMovies));
-  }, [savedMovies, loggedIn])
+  }, [savedMovies])
 
   useEffect(() => {
     localStorage.setItem('currentUser', JSON.stringify(currentUser))
@@ -186,9 +208,9 @@ function App() {
 
   //показ определенного кол-ва карточек с фильмами
   function showExactMoviesAmount() {
-    if(window.screen.width < 400){
+    if( window.screen.width < MOBILE_WIDTH ){
       setMoviesAmount({startCard: 5, rowCard: 1, moreCard: 2})
-    } else if(window.screen.width < 768){
+    } else if (window.screen.width < TABLET_WIDTH ){
       setMoviesAmount({startCard: 8, rowCard: 2, moreCard: 2})
     } else {
       setMoviesAmount({startCard: 12, rowCard: 3, moreCard: 3})
@@ -213,7 +235,7 @@ function App() {
   }
 
   //поиск короткометражек среди отфильтрованных фильмов
-  const shortMovies = (findedMovies) => findedMovies.filter((movie) =>  movie.duration < 40)
+  const shortMovies = (findedMovies) => findedMovies.filter((movie) =>  movie.duration < SHORT_MOVIE_DURATION)
 
   //добавление в сохраненные
   function addToSaved(movie) {
