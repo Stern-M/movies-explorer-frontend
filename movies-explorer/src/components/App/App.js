@@ -36,6 +36,33 @@ function App() {
 
 
   useEffect(() => {
+    tokenCheck()
+  }, [])
+
+  // проверяем есть ли в localStorage данные по фильмам и сохраненным фильмам, чтобы не запрашивать каждый раз
+  useEffect(() => {
+    const allMovies = JSON.parse(localStorage.getItem('movies'));
+    if (allMovies) {
+      setAllMovies(allMovies);
+    } else {
+      getAllMovies();
+    }
+    const savedMovies = JSON.parse(localStorage.getItem('savedMovies'));
+    if (savedMovies) {
+      setSavedMovies(savedMovies);
+    } else {
+      getSavedMovies();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (loggedIn) {
+      getSavedMovies();
+      getAllMovies();
+    }
+  }, [loggedIn])
+
+  useEffect(() => {
     setShortFilter(false);
   }, [pathname])
 
@@ -133,103 +160,51 @@ function App() {
   }
 
   function getAllMovies() {
-    const allMovies = JSON.parse(localStorage.getItem('movies'));
-    if (allMovies) {
-      setAllMovies(allMovies);
-    } else {
-      setLoader('preloader_active')
-      moviesApi
-        .getAllMovies()
-        .then((movies) => {
-          setAllMovies(movies.map((item) => {
-            const imageURL = item.image ? item.image.url : '';
-            return {
-              ...item,
-              image: `https://api.nomoreparties.co${imageURL}`,
-              trailer: item.trailerLink,
-            };
-          }))
-          localStorage.setItem('movies', JSON.stringify(movies))
-        })
-        .catch(() => {
-          setLoadingError('Во время запроса произошла ошибка. '
-            + 'Возможно, проблема с соединением или сервер недоступен. '
-            + 'Подождите немного и попробуйте ещё раз');
-        })
-        .finally(() => setLoader(''))
-    }
+    setLoader('preloader_active')
+    moviesApi
+      .getAllMovies()
+      .then((movies) => {
+        setAllMovies(movies.map((item) => {
+          const imageURL = item.image ? item.image.url : '';
+          return {
+            ...item,
+            image: `https://api.nomoreparties.co${imageURL}`,
+            trailer: item.trailerLink,
+          };
+        }))
+      })
+      .catch(() => {
+        setLoadingError('Во время запроса произошла ошибка. '
+          + 'Возможно, проблема с соединением или сервер недоступен. '
+          + 'Подождите немного и попробуйте ещё раз');
+      })
+      .finally(() => setLoader(''))
   }
 
   function getSavedMovies() {
-    const savedMovies = JSON.parse(localStorage.getItem('savedMovies'));
-    if (savedMovies.length === 0) {
-      setLoader('preloader_active')
-      api
-        .getSavedMovies()
-        .then((movies) => {
-          const allSavedMovies = movies.map((item) => { return { ...item, id: item.movieId }})
-          setSavedMovies(allSavedMovies)
-        })
-        .catch(() => {
-          setLoadingError('Во время запроса произошла ошибка. '
-            + 'Возможно, проблема с соединением или сервер недоступен. '
-            + 'Подождите немного и попробуйте ещё раз');
-        })
-        .finally(() => setLoader(''))
-    } else {
-      setSavedMovies(savedMovies);
-    };
+    setLoader('preloader_active')
+    api
+      .getSavedMovies()
+      .then((movies) => {
+        const allSavedMovies = movies.map((item) => { return { ...item, id: item.movieId } })
+        setSavedMovies(allSavedMovies)
+      })
+      .catch(() => {
+        setLoadingError('Во время запроса произошла ошибка. '
+          + 'Возможно, проблема с соединением или сервер недоступен. '
+          + 'Подождите немного и попробуйте ещё раз');
+      })
+      .finally(() => setLoader(''))
   }
-
-  useEffect(() => {
-    tokenCheck()
-  }, [])
-
-  // проверяем есть ли в localStorage данные по фильмам и сохраненным фильмам, чтобы не запрашивать каждый раз
-  useEffect(() => {
-    const allMovies = JSON.parse(localStorage.getItem('movies'));
-    if (allMovies) {
-      setAllMovies(allMovies);
-    } else {
-      getAllMovies();
-    }
-    const savedMovies = JSON.parse(localStorage.getItem('savedMovies'));
-    if (savedMovies) {
-      setSavedMovies(savedMovies);
-    } else {
-      getSavedMovies();
-    }
-  }, []);
-
-  // проверяем есть ли в localStorage данные по последним поискам и показываем их
-  useEffect(() => {
-      const allFilteredMovies = JSON.parse(localStorage.getItem('findedMovies'));
-      if (allFilteredMovies) {
-        setFirstSearch(false)
-        showExactMoviesAmount();
-        setFindedMoves(allFilteredMovies);
-      }
-      const savedFilteredMovies = JSON.parse(localStorage.getItem('findedUserMovies'));
-      if (savedFilteredMovies) {
-        setFirstSearch(false)
-        showExactMoviesAmount();
-        setFindedUserMoves(savedFilteredMovies)
-      }
-  }, []);
-
-
-  useEffect(() => {
-    if (loggedIn) {
-      getSavedMovies();
-      getAllMovies();
-      console.log("залогинился!")
-    }
-  }, [loggedIn])
 
   // записываем savedMovies в LS
   useEffect(() => {
     localStorage.setItem('savedMovies', JSON.stringify(savedMovies));
   }, [savedMovies, loggedIn])
+
+  useEffect(() => {
+    localStorage.setItem('movies', JSON.stringify(allMovies));
+  }, [allMovies, loggedIn])
 
   useEffect(() => {
     localStorage.setItem('currentUser', JSON.stringify(currentUser))
@@ -367,6 +342,9 @@ function App() {
     setLoggedIn(false);
     history.push('/');
     setCurrentUser('');
+    setFindedMoves([]);
+    setFindedUserMoves([]);
+    setSavedMovies([]);
     setInfoPopupOpen(true);
     setInfoPopup('До свидания!');
   }

@@ -15,6 +15,7 @@ function SearchForm ({findMovie, shortFilter}) {
     if (pathname === '/movies') {
       if (filter) {
         setInput(filter);
+        findMovie(filter);
       } else {
         setInput('');
       }
@@ -22,11 +23,13 @@ function SearchForm ({findMovie, shortFilter}) {
     if (pathname === '/saved-movies') {
       if (filterUser) {
         setInput(filterUser);
+        findMovie(filterUser)
       } else {
         setInput('');
       }
     }
   }, []);
+
 
   function handleChangeInput(e) {
     setInput(e.target.value);
