@@ -133,43 +133,53 @@ function App() {
   }
 
   function getAllMovies() {
-    setLoader('preloader_active')
-    moviesApi
-    .getAllMovies()
-      .then((movies) => {
-        setAllMovies(movies.map((item) => {
-          const imageURL = item.image ? item.image.url : '';
-          return {
-            ...item,
-            image: `https://api.nomoreparties.co${imageURL}`,
-            trailer: item.trailerLink,
-          };
-        }))
-        localStorage.setItem('movies', JSON.stringify(movies))
-      })
-      .catch(() => {
-        setLoadingError('Во время запроса произошла ошибка. '
-          + 'Возможно, проблема с соединением или сервер недоступен. '
-          + 'Подождите немного и попробуйте ещё раз');
-      })
-      .finally(() => setLoader(''))
+    const allMovies = JSON.parse(localStorage.getItem('movies'));
+    if (allMovies) {
+      setAllMovies(allMovies);
+    } else {
+      setLoader('preloader_active')
+      moviesApi
+        .getAllMovies()
+        .then((movies) => {
+          setAllMovies(movies.map((item) => {
+            const imageURL = item.image ? item.image.url : '';
+            return {
+              ...item,
+              image: `https://api.nomoreparties.co${imageURL}`,
+              trailer: item.trailerLink,
+            };
+          }))
+          localStorage.setItem('movies', JSON.stringify(movies))
+        })
+        .catch(() => {
+          setLoadingError('Во время запроса произошла ошибка. '
+            + 'Возможно, проблема с соединением или сервер недоступен. '
+            + 'Подождите немного и попробуйте ещё раз');
+        })
+        .finally(() => setLoader(''))
+    }
   }
 
   function getSavedMovies() {
-    setLoader('preloader_active')
-    api
-      .getSavedMovies()
-      .then((movies) => {
-        const allSavedMovies = movies.map((item) => { return { ...item, id: item.movieId }})
-        setSavedMovies(allSavedMovies)
-      })
-      .catch(() => {
-        setLoadingError('Во время запроса произошла ошибка. '
-          + 'Возможно, проблема с соединением или сервер недоступен. '
-          + 'Подождите немного и попробуйте ещё раз');
-      })
-      .finally(() => setLoader(''))
-  };
+    const savedMovies = JSON.parse(localStorage.getItem('savedMovies'));
+    if (savedMovies.length === 0) {
+      setLoader('preloader_active')
+      api
+        .getSavedMovies()
+        .then((movies) => {
+          const allSavedMovies = movies.map((item) => { return { ...item, id: item.movieId }})
+          setSavedMovies(allSavedMovies)
+        })
+        .catch(() => {
+          setLoadingError('Во время запроса произошла ошибка. '
+            + 'Возможно, проблема с соединением или сервер недоступен. '
+            + 'Подождите немного и попробуйте ещё раз');
+        })
+        .finally(() => setLoader(''))
+    } else {
+      setSavedMovies(savedMovies);
+    };
+  }
 
   useEffect(() => {
     tokenCheck()
@@ -211,13 +221,15 @@ function App() {
   useEffect(() => {
     if (loggedIn) {
       getSavedMovies();
-      getAllMovies()
+      getAllMovies();
+      console.log("залогинился!")
     }
   }, [loggedIn])
 
+  // записываем savedMovies в LS
   useEffect(() => {
     localStorage.setItem('savedMovies', JSON.stringify(savedMovies));
-  }, [savedMovies])
+  }, [savedMovies, loggedIn])
 
   useEffect(() => {
     localStorage.setItem('currentUser', JSON.stringify(currentUser))
@@ -234,6 +246,7 @@ function App() {
     }
   }
 
+  // записываем фильтрованные фильмы в LS
   useEffect(() => {
     localStorage.setItem('findedMovies', JSON.stringify(findedMovies))
   }, [findedMovies])
