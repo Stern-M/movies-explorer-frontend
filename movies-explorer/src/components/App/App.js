@@ -25,6 +25,7 @@ function App() {
   const [firstSearch, setFirstSearch] = useState(true); //поиск еще не выполнялся
   const [allMovies, setAllMovies] = useState([]); // все фильмы с сервера https://api.nomoreparties.co/beatfilm-movies
   const [findedMovies, setFindedMoves] = useState([]); // фильмы после поиска
+  const [findedUserMovies, setFindedUserMoves] = useState([]); // фильмы после поиска по сохраненкам
   const [savedMovies, setSavedMovies] = useState([]); // сохраненные фильмы
   const [moviesAmount, setMoviesAmount] = useState({startCard: 0, rowCard: 0, moreCard: 0});
   const [shortFilter, setShortFilter] = useState(false); // фильтр короткометражек
@@ -35,8 +36,7 @@ function App() {
 
 
   useEffect(() => {
-    setFindedMoves([]);
-    setShortFilter(false)
+    setShortFilter(false);
   }, [pathname])
 
   //авторизация
@@ -191,6 +191,23 @@ function App() {
     }
   }, []);
 
+  // проверяем есть ли в localStorage данные по последним поискам и показываем их
+  useEffect(() => {
+      const allFilteredMovies = JSON.parse(localStorage.getItem('findedMovies'));
+      if (allFilteredMovies) {
+        setFirstSearch(false)
+        showExactMoviesAmount();
+        setFindedMoves(allFilteredMovies);
+      }
+      const savedFilteredMovies = JSON.parse(localStorage.getItem('findedUserMovies'));
+      if (savedFilteredMovies) {
+        setFirstSearch(false)
+        showExactMoviesAmount();
+        setFindedUserMoves(savedFilteredMovies)
+      }
+  }, []);
+
+
   useEffect(() => {
     if (loggedIn) {
       getSavedMovies();
@@ -217,6 +234,14 @@ function App() {
     }
   }
 
+  useEffect(() => {
+    localStorage.setItem('findedMovies', JSON.stringify(findedMovies))
+  }, [findedMovies])
+
+  useEffect(() => {
+    localStorage.setItem('findedUserMovies', JSON.stringify(findedUserMovies))
+  }, [findedUserMovies])
+
   //поиск фильмов либо среди сохраненных, либо среди всех фильмов (в зависимости от pathname)
   function findMovie(searcInput) {
     setFirstSearch(false)
@@ -227,12 +252,13 @@ function App() {
         return movie.nameRU.toLowerCase().includes(searcInput.toLowerCase());
       }))
     } else {
-      setFindedMoves(savedMovies.filter((movie) => {
+      setFindedUserMoves(savedMovies.filter((movie) => {
         return movie.nameRU.toLowerCase().includes(searcInput.toLowerCase())
       }))
     }
     setLoader('')
   }
+
 
   //поиск короткометражек среди отфильтрованных фильмов
   const shortMovies = (findedMovies) => findedMovies.filter((movie) =>  movie.duration < SHORT_MOVIE_DURATION)
@@ -268,7 +294,7 @@ function App() {
             setSavedMovies(updatedSavedMovies)
             const updatedFilteredMovies = findedMovies.filter((movie) => {
               return !movie.nameRU.toLowerCase().includes(movieForDel.nameRU.toLowerCase())})
-            setFindedMoves(updatedFilteredMovies)
+            setFindedUserMoves(updatedFilteredMovies)
           }
           }
         })
@@ -362,7 +388,7 @@ function App() {
             loggedIn={loggedIn}
             moviesAmount={moviesAmount}
             setMoviesAmount={setMoviesAmount}
-            findedMovies={findedMovies}
+            findedMovies={findedUserMovies}
             handleShortFilter={handleShortFilter}
             shortFilter={shortFilter}
             shortMovies={shortMovies}

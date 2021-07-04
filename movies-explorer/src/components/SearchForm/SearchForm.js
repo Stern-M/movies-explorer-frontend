@@ -1,10 +1,32 @@
 import './SearchForm.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
+import { useLocation } from 'react-router-dom';
 
 function SearchForm ({findMovie, shortFilter}) {
+  const { pathname } = useLocation();
   const [input, setInput] = useState('');
+  const filter = localStorage.getItem('filterWord');
+  const filterUser = localStorage.getItem('filterUserWord');
+
+  // при монтировании компонента проверяем было ли что-то в инпут и если было показываем
+  useEffect(() => {
+    if (pathname === '/movies') {
+      if (filter) {
+        setInput(filter);
+      } else {
+        setInput('');
+      }
+    }
+    if (pathname === '/saved-movies') {
+      if (filterUser) {
+        setInput(filterUser);
+      } else {
+        setInput('');
+      }
+    }
+  }, []);
 
   function handleChangeInput(e) {
     setInput(e.target.value);
@@ -12,7 +34,12 @@ function SearchForm ({findMovie, shortFilter}) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    findMovie(input)
+    findMovie(input);
+    if (pathname === '/movies') {
+      localStorage.setItem('filterWord', input)
+    } if (pathname === '/saved-movies') {
+      localStorage.setItem('filterUserWord', input)
+    }
   }
 
   return (
@@ -24,7 +51,8 @@ function SearchForm ({findMovie, shortFilter}) {
             type="text"
             className="search-form__input"
             placeholder="Фильм"
-            // required="true"
+            required="true"
+            value={input ? input : ''}
             minLength="1"
             maxLength="150"
             size="1"
