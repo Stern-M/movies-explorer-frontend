@@ -4,30 +4,44 @@ import './MoviesCard.css';
 import saveIcon from '../../images/save-icon.svg';
 import delIcon from '../../images/del-icon.svg';
 import savedIcon from '../../images/saved-icon.svg';
-import testImage from '../../images/movie-image.svg'
 
 
-function MoviesCard(props) {
+function MoviesCard({movie, isMovieAdded, saveDeleteMovieHandler}) {
   const { pathname } = useLocation();
-  // состояние isAdded будет задаваться
-  const isAdded = props.isAdded;
+  
+  const {
+    nameRU, duration, trailer, image,
+  } = movie;
+
+  function setDuration() {
+    const hours = Math.trunc(duration / 60);
+    const minutes = duration % 60;
+    return `${hours > 0 ? `${hours}ч ` : ''}${minutes}м`
+  }
+
+  const isAdded = (pathname === "/saved-movies" ? true : isMovieAdded(movie)) ;
   const saveIconButton = (isAdded ? savedIcon : saveIcon)
   const cardIcon = (pathname === "/movies" ? saveIconButton : delIcon)
+
+  function handleIconClick(evt) {
+    evt.preventDefault();
+    saveDeleteMovieHandler(movie, isAdded);
+  };
   
   return (
     <li className="movie">
       <div className="movie__container">
-        <div className="movie__description">
-          <h3 className="movie__title">33 слова о дизайне</h3>
-          <span className="movie__duration">1ч 47м</span>
+        <div className="movie__description movie__meta-container">
+          <h3 className="movie__title">{nameRU}</h3>
+          <span className="movie__duration">{setDuration()}</span>
         </div>
         <button type="button" className="movie__button" >
-          <img src={cardIcon} alt="избранное" className="movie__save-icon"/>
+          <img src={cardIcon} alt="избранное" className="movie__save-icon" onClick={handleIconClick} />
         </button>
-        
       </div>
-      <img src={testImage} alt="Тестовое изображение" className="movie__image" />
-      
+      <a href={trailer} className="card__trailer-link" rel="noreferrer" target="_blank">
+        <img src={image} alt={nameRU} className="movie__image" />
+      </a>
     </li>
   );
 }

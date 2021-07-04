@@ -7,7 +7,7 @@ import BurgerMenu from '../BurgerMenu/BurgerMenu';
 import MainLogo from '../MainLogo/MainLogo';
 import AccountBtn from '../AccountBtn/AccountBtn';
 
-function Header () {
+function Header (props) {
   const { pathname } = useLocation();
   const history = useHistory();
 
@@ -29,15 +29,24 @@ function Header () {
   const isWidth = width <= 768
 
   if (pathname === '/') {
+    if (props.isLogged) {
     return (
       <header className="header header-rose">
         < MainLogo />
-        <div className="header__button-container">
-          <button className="header__button-signup" onClick={() => { history.push("/signup") }}>Регистрация</button>
-          <button className="header__button-signin" onClick={() => { history.push("/signin") }}>Войти</button>
-        </div>
+        < Navigation />
+        < AccountBtn />
       </header>
-    );
+    ); } else {
+      return (
+        <header className="header header-rose">
+          < MainLogo />
+          <div className="header__button-container">
+            <button className="header__button-signup" onClick={() => { history.push("/signup") }}>Регистрация</button>
+            <button className="header__button-signin" onClick={() => { history.push("/signin") }}>Войти</button>
+          </div>
+        </header>
+      ); 
+    }
   }
 
   if (isWidth) {
