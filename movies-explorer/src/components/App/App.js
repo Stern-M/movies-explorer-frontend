@@ -267,7 +267,7 @@ function App() {
   };
 
   // удаление из сохраненных 
-  function removeFromSaved(movie, findedMovies) {
+  function removeFromSaved(movie, findedMovies, findedUserMovies) {
     const movieForDel = savedMovies.find((item) => item.id === movie.id);
     const movieId = movieForDel._id;
     api
@@ -280,7 +280,7 @@ function App() {
           } else {
             const updatedSavedMovies = savedMovies.filter((movie) => { return movie._id !== movieId})
             setSavedMovies(updatedSavedMovies)
-            const updatedFilteredMovies = findedMovies.filter((movie) => {
+            const updatedFilteredMovies = findedUserMovies.filter((movie) => {
               return !movie.nameRU.toLowerCase().includes(movieForDel.nameRU.toLowerCase())})
             setFindedUserMoves(updatedFilteredMovies)
           }
@@ -334,7 +334,7 @@ function App() {
   const isMovieAdded = (movie) => savedMovies.some((item) => item.id === movie.id)
 
   //опеределяем нужно сохранить или удалить по клику
-  const saveDeleteMovieHandler = (movie, isAdded) => (isAdded ? removeFromSaved(movie, findedMovies) : addToSaved(movie) );
+  const saveDeleteMovieHandler = (movie, isAdded) => (isAdded ? removeFromSaved(movie, findedMovies, findedUserMovies) : addToSaved(movie) );
 
   //выход из аккаунта
   function signOut() {
